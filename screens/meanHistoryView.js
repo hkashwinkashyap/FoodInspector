@@ -1,0 +1,16 @@
+import { Text, View } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
+
+const MealHistoryView = () => {
+    return (
+        <SafeAreaView>
+        <View>
+            <Text>
+                Meal History
+            </Text>
+        </View>
+        </SafeAreaView>
+    )
+}
+
+export default MealHistoryView
