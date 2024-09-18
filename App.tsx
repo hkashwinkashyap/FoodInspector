@@ -16,7 +16,7 @@ import SettingsView from './screens/settingsView';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MealHistoryView from './screens/meanHistoryView';
 import SearchView from './screens/searchView';
-import {DEFAULT_PROPS} from './constants';
+import {DEFAULT_PROPS} from './utils/constants';
 import {Provider} from 'react-redux';
 import store from './utils/store';
 
