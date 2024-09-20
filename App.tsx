@@ -18,13 +18,17 @@ import MealHistoryView from './screens/meanHistoryView';
 import SearchView from './screens/searchView';
 import {DEFAULT_PROPS} from './utils/constants';
 import {Provider} from 'react-redux';
-import store from './utils/store';
+import store, {setColourTheme as setColourThemeInStore} from './utils/store';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const dispath = store.dispatch;
+
+  const colorScheme = useColorScheme();
+  dispath(setColourThemeInStore(colorScheme));
 
   return (
     <Provider store={store}>
@@ -32,9 +36,11 @@ function App(): React.JSX.Element {
         <Tab.Navigator
           initialRouteName="Home"
           screenOptions={{
-            tabBarStyle: {backgroundColor: 'black'},
+            tabBarStyle: {
+              backgroundColor: colorScheme === 'dark' ? 'black' : 'white',
+            },
             tabBarLabelStyle: {
-              color: 'white',
+              color: colorScheme === 'dark' ? 'white' : 'black',
               fontSize: DEFAULT_PROPS.MD_FONT_SIZE,
             },
           }}>
@@ -43,49 +49,61 @@ function App(): React.JSX.Element {
             component={HomeView}
             options={{
               headerShown: false,
-              // tabBarIcon: () => (
-              //   <Icon name="home" color={'white'} size={DEFAULT_PROPS.MD_FONT_SIZE}/>
-              // )
+              tabBarIcon: () => (
+                <Icon
+                  name={'home-outline'}
+                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  size={DEFAULT_PROPS.LG_FONT_SIZE}
+                />
+              ),
             }}
           />
           <Tab.Screen
             name="Search"
             component={SearchView}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              tabBarIcon: () => (
+                <Icon
+                  name={'search-outline'}
+                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  size={DEFAULT_PROPS.LG_FONT_SIZE}
+                />
+              ),
+            }}
           />
           <Tab.Screen
             name="Meal History"
             component={MealHistoryView}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              tabBarIcon: () => (
+                <Icon
+                  name={'file-tray-full-outline'}
+                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  size={DEFAULT_PROPS.LG_FONT_SIZE}
+                />
+              ),
+            }}
           />
           <Tab.Screen
             name="Settings"
             component={SettingsView}
-            options={{headerShown: false}}
+            options={{
+              headerShown: false,
+              tabBarIcon: () => (
+                <Icon
+                  name={'settings-outline'}
+                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  size={DEFAULT_PROPS.LG_FONT_SIZE}
+                />
+              ),
+            }}
           />
         </Tab.Navigator>
       </NavigationContainer>
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
 
 export default App;

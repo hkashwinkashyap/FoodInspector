@@ -3,6 +3,9 @@ export const PEXELS_API_URL = 'https://api.pexels.com/v1/search';
 
 export const DEFAULT_PROPS = {
     MD_FONT_SIZE: 12,
+    LG_FONT_SIZE: 16,
+    XL_FONT_SIZE: 20,
+    XXL_FONT_SIZE: 24,
 }
 
 export const KEY_NUTRIENTS = [

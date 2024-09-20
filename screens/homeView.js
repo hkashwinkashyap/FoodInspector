@@ -4,14 +4,15 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { setMacrosData as setMacrosDataInStore } from "../utils/store";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadCSV, screenHeight, screenWidth } from "../utils/functions";
-import { KEY_NUTRIENTS, KEY_VITAMINS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
+import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_VITAMINS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
 import axios from "axios";
-
 
 const HomeView = () => {
     const dispatch = useDispatch();
 
     const macrosData = useSelector((state) => state.macrosData.nutrients)
+
+    const currentTheme = useSelector((state) => state.colourTheme.currentTheme);
 
     const [randomItems, setRandomItems] = useState([]);
 
@@ -41,7 +42,6 @@ const HomeView = () => {
     }, [macrosData]);
 
     useEffect(() => {
-
         const fetchImage = async () => {
             setLoading(true)
             try {
@@ -51,10 +51,9 @@ const HomeView = () => {
                     },
                     params: {
                         query: randomItems[currentIndex],
-                        per_page: 1,
+                        per_page: 2,
                     },
                 });
-                console.log(response.data.photos[0])
                 if (response.data.photos.length > 0) {
                     setImage(response.data.photos[0].src.original);
                 } else {
@@ -86,8 +85,13 @@ const HomeView = () => {
         const nutrients = macrosData[item];
 
         return (
-            <View style={styles.foodCard}>
-                <Text style={styles.foodName}>{item}</Text>
+            <View style={[styles.foodCard, {
+                backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
+                shadowColor: currentTheme === 'dark' ? 'white' : 'black',
+            }]}>
+                <Text style={[styles.foodName, {
+                    color: currentTheme === 'dark' ? 'white' : 'black',
+                }]}>{item}</Text>
                 <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.4}>
                     {!loading ? (
                         <Image source={{ uri: image }} width={'100%'} height={screenHeight() * 0.4} />
@@ -99,18 +103,26 @@ const HomeView = () => {
                 <View flexDirection={'column'}>
                     <View style={styles.nutrientContainer} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
                         {(KEY_NUTRIENTS).map((_, index) => (
-                            <View alignItems={'center'} justifyContent={'center'}>
-                                <Text style={styles.nutrientText}>
+                            <View key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
+                                <Text style={[styles.nutrientText, {
+                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                }]}>
                                     {KEY_NUTRIENTS[index]}
                                 </Text>
-                                <Text style={styles.nutrientText}>
+                                <Text style={[styles.nutrientText, {
+                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                }]}>
                                     {nutrients[KEY_NUTRIENTS[index] === 'Calories' ? 'Caloric Value' : KEY_NUTRIENTS[index]]}
                                 </Text>
                                 <View marginVertical={10} />
-                                <Text style={styles.nutrientText}>
+                                <Text style={[styles.nutrientText, {
+                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                }]}>
                                     Vitamin {KEY_VITAMINS[index]}
                                 </Text>
-                                <Text style={styles.nutrientText}>
+                                <Text style={[styles.nutrientText, {
+                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                }]}>
                                     {nutrients[`Vitamin ${KEY_VITAMINS[index]}`]}
                                 </Text>
                             </View>
@@ -139,21 +151,59 @@ const HomeView = () => {
                             // Swipe up detected
                             if (currentIndex < randomItems.length - 1) {
                                 setCurrentIndex((prevIndex) => prevIndex + 1);
+                                Animated.timing(pan, {
+                                    toValue: screenHeight(),
+                                    easing: Easing.ease,
+                                    duration: 10,
+                                    useNativeDriver: true,
+                                }).start(finished => {
+                                    Animated.spring(pan, {
+                                        toValue: 0,
+                                        easing: Easing.bounce,
+                                        bounciness: 10,
+                                        useNativeDriver: true,
+                                    }).start();
+                                    pan.flattenOffset();
+                                });
                             }
                         }
                         if (gestureState.dy > 0) {
                             // Swipe down detected
                             if (currentIndex > 0) {
                                 setCurrentIndex((prevIndex) => prevIndex - 1);
+                                Animated.timing(pan, {
+                                    toValue: -screenHeight(),
+                                    easing: Easing.ease,
+                                    duration: 10,
+                                    useNativeDriver: true,
+                                }).start(finished => {
+                                    Animated.spring(pan, {
+                                        toValue: 0,
+                                        easing: Easing.bounce,
+                                        bounciness: 10,
+                                        useNativeDriver: true,
+                                    }).start();
+                                    pan.flattenOffset();
+                                }
+                                );
+                            } else {
+                                Animated.spring(pan, {
+                                    toValue: 0,
+                                    easing: Easing.bounce,
+                                    bounciness: 10,
+                                    useNativeDriver: true,
+                                }).start();
                             }
                         }
                     }
-                    Animated.spring(pan, {
-                        toValue: 0,
-                        easing: Easing.bounce,
-                        bounciness: 10,
-                        useNativeDriver: true,
-                    }).start();
+                    else {
+                        Animated.spring(pan, {
+                            toValue: 0,
+                            easing: Easing.bounce,
+                            bounciness: 10,
+                            useNativeDriver: true,
+                        }).start();
+                    }
                     pan.flattenOffset();
                 },
             }),
@@ -161,7 +211,9 @@ const HomeView = () => {
     );
 
     return (
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={[styles.safeArea, {
+            backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
+        }]}>
             {randomItems.length > 0 && (
                 <Animated.View
                     style={[
@@ -183,10 +235,10 @@ export default HomeView
 
 const styles = StyleSheet.create({
     safeArea: {
-        backgroundColor: 'black',
+        height: screenHeight(),
     },
     fullViewCard: {
-        height: screenHeight(),
+        height: '100%',
     },
     image: {
         borderRadius: 10,
@@ -194,21 +246,18 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     foodCard: {
-        backgroundColor: '#fff',
         padding: 20,
         marginVertical: 10,
         marginHorizontal: 15,
         borderRadius: 10,
-        shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 3,
     },
     foodName: {
-        fontSize: 24,
+        fontSize: DEFAULT_PROPS.XXL_FONT_SIZE,
         fontWeight: 'bold',
-        color: '#333',
         marginBottom: 10,
         textTransform: 'capitalize',
     },
@@ -217,8 +266,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     nutrientText: {
-        fontSize: 16,
-        color: '#555',
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         marginVertical: 4,
     },
 });
