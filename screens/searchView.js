@@ -36,9 +36,9 @@ const SearchView = () => {
         }
     };
 
-    useFocusEffect(() => {
+    useFocusEffect(React.useCallback(() => {
         focusSearchInput();
-    }, []);
+    }, []));
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: currentTheme === 'dark' ? 'black' : 'white' }]}>
