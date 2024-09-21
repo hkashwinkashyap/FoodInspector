@@ -5,6 +5,8 @@ import {
   StatusBar,
   StyleSheet,
   Text,
+  Touchable,
+  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
@@ -35,27 +37,69 @@ function App(): React.JSX.Element {
       <NavigationContainer>
         <Tab.Navigator
           initialRouteName="Home"
-          screenOptions={{
+          screenOptions={({route}) => ({
             tabBarStyle: {
               backgroundColor: colorScheme === 'dark' ? 'black' : 'white',
             },
             tabBarLabelStyle: {
               color: colorScheme === 'dark' ? 'white' : 'black',
               fontSize: DEFAULT_PROPS.MD_FONT_SIZE,
+              fontWeight: 'normal',
             },
-          }}>
+            tabBarIcon: ({focused}) => {
+              let iconName;
+              switch (route.name) {
+                case 'Home':
+                  iconName = 'home-outline';
+                  break;
+                case 'Search':
+                  iconName = 'search-outline';
+                  break;
+                case 'Meal History':
+                  iconName = 'file-tray-full-outline';
+                  break;
+                case 'Settings':
+                  iconName = 'settings-outline';
+                  break;
+                default:
+                  iconName = 'home-outline';
+              }
+              return (
+                <Icon
+                  name={iconName}
+                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  size={
+                    focused
+                      ? DEFAULT_PROPS.XL_FONT_SIZE
+                      : DEFAULT_PROPS.MD_FONT_SIZE
+                  }
+                />
+              );
+            },
+            tabBarButton: props => (
+              <TouchableOpacity
+                onPress={props.onPress}
+                style={{
+                  backgroundColor:
+                    props.accessibilityState?.selected ?? false
+                      ? colorScheme === 'dark'
+                        ? DEFAULT_PROPS.tabBarBackgroundColorDarkMode
+                        : DEFAULT_PROPS.tabBarBackgroundColorLightMode
+                      : 'transparent',
+                  borderRadius: 20,
+                  width: '25%',
+                  height: '100%',
+                  padding: 4,
+                }}>
+                {props.children}
+              </TouchableOpacity>
+            ),
+          })}>
           <Tab.Screen
             name="Home"
             component={HomeView}
             options={{
               headerShown: false,
-              tabBarIcon: () => (
-                <Icon
-                  name={'home-outline'}
-                  color={colorScheme === 'dark' ? 'white' : 'black'}
-                  size={DEFAULT_PROPS.LG_FONT_SIZE}
-                />
-              ),
             }}
           />
           <Tab.Screen
@@ -63,13 +107,6 @@ function App(): React.JSX.Element {
             component={SearchView}
             options={{
               headerShown: false,
-              tabBarIcon: () => (
-                <Icon
-                  name={'search-outline'}
-                  color={colorScheme === 'dark' ? 'white' : 'black'}
-                  size={DEFAULT_PROPS.LG_FONT_SIZE}
-                />
-              ),
             }}
           />
           <Tab.Screen
@@ -77,13 +114,6 @@ function App(): React.JSX.Element {
             component={MealHistoryView}
             options={{
               headerShown: false,
-              tabBarIcon: () => (
-                <Icon
-                  name={'file-tray-full-outline'}
-                  color={colorScheme === 'dark' ? 'white' : 'black'}
-                  size={DEFAULT_PROPS.LG_FONT_SIZE}
-                />
-              ),
             }}
           />
           <Tab.Screen
@@ -91,13 +121,6 @@ function App(): React.JSX.Element {
             component={SettingsView}
             options={{
               headerShown: false,
-              tabBarIcon: () => (
-                <Icon
-                  name={'settings-outline'}
-                  color={colorScheme === 'dark' ? 'white' : 'black'}
-                  size={DEFAULT_PROPS.LG_FONT_SIZE}
-                />
-              ),
             }}
           />
         </Tab.Navigator>
