@@ -8,13 +8,13 @@ export const DEFAULT_PROPS = {
     LG_FONT_SIZE: 16,
     XL_FONT_SIZE: 20,
     XXL_FONT_SIZE: 24,
-}
+};
 
 export const KEY_NUTRIENTS = [
     'Calories',
     'Protein',
     'Fat',
-    'Sugars'
+    'Sugars',
 ];
 
 export const KEY_VITAMINS = [
@@ -22,4 +22,4 @@ export const KEY_VITAMINS = [
     'C',
     'B6',
     'B12',
-]
+];

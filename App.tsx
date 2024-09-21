@@ -1,19 +1,9 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {TouchableOpacity, useColorScheme} from 'react-native';
 
 import HomeView from './src/screens/homeView';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+// import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SettingsView from './src/screens/settingsView';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import MealHistoryView from './src/screens/meanHistoryView';
@@ -25,7 +15,7 @@ import store, {
 } from './src/utils/store';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Stack = createNativeStackNavigator();
+// const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function App(): React.JSX.Element {

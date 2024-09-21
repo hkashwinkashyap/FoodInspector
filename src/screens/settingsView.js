@@ -1,4 +1,4 @@
-import { SafeAreaView, Text, View } from "react-native"
+import { SafeAreaView, Text, View } from 'react-native';
 
 const SettingsView = () => {
     return (
@@ -9,7 +9,7 @@ const SettingsView = () => {
             </Text>
         </View>
         </SafeAreaView>
-    )
-}
+    );
+};
 
-export default SettingsView
+export default SettingsView;

@@ -1,4 +1,4 @@
-import { Animated, Easing, FlatList, Image, PanResponder, StyleSheet, Text, View } from "react-native"
+import { Animated, Easing, Image, PanResponder, StyleSheet, Text, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useCallback, useEffect, useRef, useState } from "react";
 import { setMacrosData as setMacrosDataInStore } from "../utils/store";
@@ -31,7 +31,7 @@ const HomeView = () => {
         }
 
         loadMacrosData()
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         if (macrosData && Object.keys(macrosData).length > 0) {

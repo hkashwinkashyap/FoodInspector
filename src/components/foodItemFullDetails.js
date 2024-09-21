@@ -1,7 +1,7 @@
-import { BlurView } from "@react-native-community/blur";
-import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
-import { screenHeight, screenWidth } from "../utils/functions";
-import { DEFAULT_PROPS } from "../utils/constants";
+import { BlurView } from '@react-native-community/blur';
+import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { screenHeight, screenWidth } from '../utils/functions';
+import { DEFAULT_PROPS } from '../utils/constants';
 
 const FoodItemFullDetails = ({ foodItemName, foodItem, visible, width, height, backgroundColor, onClose }) => {
     return (
@@ -34,7 +34,7 @@ const FoodItemFullDetails = ({ foodItemName, foodItem, visible, width, height, b
             </TouchableOpacity>
         </Modal>
     );
-}
+};
 
 const styles = {
     foodName: {

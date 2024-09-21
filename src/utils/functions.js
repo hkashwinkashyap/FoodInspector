@@ -1,6 +1,6 @@
-import { Dimensions } from "react-native";
-import { readString } from "react-native-csv";
-import RNFS from 'react-native-fs'
+import { Dimensions } from 'react-native';
+import { readString } from 'react-native-csv';
+import RNFS from 'react-native-fs';
 
 
 export const ParseCSV = (csvContent) => {
@@ -53,7 +53,7 @@ export const ParseCSV = (csvContent) => {
                     'Potassium': row[33], // 34th column (index 33)
                     'Selenium': row[34], // 35th column (index 34)
                     'Zinc': row[35], // 36th column (index 35)
-                    'Nutrition Density': row[36] // 37th column (index 36)
+                    'Nutrition Density': row[36], // 37th column (index 36)
                 };
 
                 // Add the food data to the result object
@@ -75,7 +75,7 @@ export const LoadCSV = async () => {
             'FOOD-DATA-GROUP2.csv',
             'FOOD-DATA-GROUP3.csv',
             'FOOD-DATA-GROUP4.csv',
-            'FOOD-DATA-GROUP5.csv'
+            'FOOD-DATA-GROUP5.csv',
         ];
 
         const allData = await Promise.all(
@@ -96,7 +96,7 @@ export const LoadCSV = async () => {
         // Combine data from all files
         const combined = allData.reduce((acc, data) => ({ ...acc, ...data }), {});
 
-        return combined
+        return combined;
     } catch (err) {
         console.error('Error loading CSV files:', err);
     }

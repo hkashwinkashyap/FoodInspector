@@ -1,5 +1,5 @@
-import { Text, View } from "react-native"
-import { SafeAreaView } from "react-native-safe-area-context"
+import { Text, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const MealHistoryView = () => {
     return (
@@ -10,7 +10,7 @@ const MealHistoryView = () => {
             </Text>
         </View>
         </SafeAreaView>
-    )
-}
+    );
+};
 
-export default MealHistoryView
+export default MealHistoryView;

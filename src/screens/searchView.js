@@ -46,7 +46,7 @@ const SearchView = () => {
         setFoodItemModalVisible(true);
         setSelectedFoodItem(macrosData[foodItem]);
         setSelectedFoodItemName(foodItem);
-    }
+    };
 
     useFocusEffect(React.useCallback(() => {
         focusSearchInput();
@@ -91,7 +91,7 @@ const SearchView = () => {
                 renderItem={({ item }) => (
                     <View>
                         <TouchableOpacity onPress={() => {
-                            handleViewFoodItem(item)
+                            handleViewFoodItem(item);
                         }}
                             style={styles.suggestionItem}>
                             <Text style={[styles.suggestionText, {
