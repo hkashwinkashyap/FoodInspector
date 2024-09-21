@@ -11,16 +11,18 @@ import {
   View,
 } from 'react-native';
 
-import HomeView from './screens/homeView';
+import HomeView from './src/screens/homeView';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SettingsView from './screens/settingsView';
+import SettingsView from './src/screens/settingsView';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MealHistoryView from './screens/meanHistoryView';
-import SearchView from './screens/searchView';
-import {DEFAULT_PROPS} from './utils/constants';
+import MealHistoryView from './src/screens/meanHistoryView';
+import SearchView from './src/screens/searchView';
+import {DEFAULT_PROPS} from './src/utils/constants';
 import {Provider} from 'react-redux';
-import store, {setColourTheme as setColourThemeInStore} from './utils/store';
+import store, {
+  setColourTheme as setColourThemeInStore,
+} from './src/utils/store';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const Stack = createNativeStackNavigator();
@@ -42,7 +44,7 @@ function App(): React.JSX.Element {
               backgroundColor: colorScheme === 'dark' ? 'black' : 'white',
             },
             tabBarLabelStyle: {
-              color: colorScheme === 'dark' ? 'white' : 'black',
+              color: colorScheme === 'dark' ? 'white' : '#333',
               fontSize: DEFAULT_PROPS.MD_FONT_SIZE,
               fontWeight: 'normal',
             },
@@ -67,7 +69,7 @@ function App(): React.JSX.Element {
               return (
                 <Icon
                   name={iconName}
-                  color={colorScheme === 'dark' ? 'white' : 'black'}
+                  color={colorScheme === 'dark' ? 'white' : '#333'}
                   size={
                     focused
                       ? DEFAULT_PROPS.XL_FONT_SIZE
@@ -86,7 +88,7 @@ function App(): React.JSX.Element {
                         ? DEFAULT_PROPS.tabBarBackgroundColorDarkMode
                         : DEFAULT_PROPS.tabBarBackgroundColorLightMode
                       : 'transparent',
-                  borderRadius: 20,
+                  borderRadius: DEFAULT_PROPS.LG_FONT_SIZE,
                   width: '25%',
                   height: '100%',
                   padding: 4,

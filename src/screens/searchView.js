@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { DEFAULT_PROPS } from '../utils/constants'; // Assuming constants are available
 import { useSelector } from 'react-redux';
 import { useFocusEffect } from '@react-navigation/native';
+import FoodItemFullDetails from '../components/foodItemFullDetails';
+import { screenHeight, screenWidth } from '../utils/functions';
 
 const SearchView = () => {
     const macrosData = useSelector((state) => state.macrosData.nutrients);
@@ -13,6 +15,10 @@ const SearchView = () => {
 
     const [query, setQuery] = useState('');
     const [suggestions, setSuggestions] = useState([]);
+
+    const [foodItemModalVisible, setFoodItemModalVisible] = useState(false);
+    const [selectedFoodItem, setSelectedFoodItem] = useState({});
+    const [selectedFoodItemName, setSelectedFoodItemName] = useState('');
 
     const handleSearch = (text) => {
         setQuery(text);
@@ -36,12 +42,31 @@ const SearchView = () => {
         }
     };
 
+    const handleViewFoodItem = (foodItem) => {
+        setFoodItemModalVisible(true);
+        setSelectedFoodItem(macrosData[foodItem]);
+        setSelectedFoodItemName(foodItem);
+    }
+
     useFocusEffect(React.useCallback(() => {
         focusSearchInput();
     }, []));
 
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: currentTheme === 'dark' ? 'black' : 'white' }]}>
+            <FoodItemFullDetails
+                visible={foodItemModalVisible}
+                onClose={() => {
+                    setFoodItemModalVisible(false);
+                    setSelectedFoodItem({});
+                    setSelectedFoodItemName('');
+                }}
+                foodItemName={selectedFoodItemName}
+                foodItem={selectedFoodItem}
+                width={0.9 * screenWidth()}
+                height={0.8 * screenHeight()}
+                backgroundColor={currentTheme === 'dark' ? '#333' : '#f0f0f0'}
+            />
             {/* Search Input */}
             <View style={[styles.searchBar, {
                 borderColor: currentTheme === 'dark' ? '#ccc' : '#333',
@@ -65,7 +90,10 @@ const SearchView = () => {
                 keyExtractor={(item) => item}
                 renderItem={({ item }) => (
                     <View>
-                        <TouchableOpacity style={styles.suggestionItem}>
+                        <TouchableOpacity onPress={() => {
+                            handleViewFoodItem(item)
+                        }}
+                            style={styles.suggestionItem}>
                             <Text style={[styles.suggestionText, {
                                 color: currentTheme === 'dark' ? '#fff' : '#333',
                             }]}>{item}</Text>

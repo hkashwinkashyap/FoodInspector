@@ -86,11 +86,11 @@ const HomeView = () => {
 
         return (
             <View style={[styles.foodCard, {
-                backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
-                shadowColor: currentTheme === 'dark' ? 'white' : 'black',
+                backgroundColor: currentTheme === 'dark' ? '#002021' : 'white',
+                shadowColor: currentTheme === 'dark' ? 'white' : '#333',
             }]}>
                 <Text style={[styles.foodName, {
-                    color: currentTheme === 'dark' ? 'white' : 'black',
+                    color: currentTheme === 'dark' ? 'white' : '#333',
                 }]}>{item}</Text>
                 <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.4}>
                     {!loading ? (
@@ -105,23 +105,23 @@ const HomeView = () => {
                         {(KEY_NUTRIENTS).map((_, index) => (
                             <View key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
                                 <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                    color: currentTheme === 'dark' ? 'white' : '#333',
                                 }]}>
                                     {KEY_NUTRIENTS[index]}
                                 </Text>
                                 <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                    color: currentTheme === 'dark' ? 'white' : '#333',
                                 }]}>
                                     {nutrients[KEY_NUTRIENTS[index] === 'Calories' ? 'Caloric Value' : KEY_NUTRIENTS[index]]}
                                 </Text>
                                 <View marginVertical={10} />
                                 <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                    color: currentTheme === 'dark' ? 'white' : '#333',
                                 }]}>
                                     Vitamin {KEY_VITAMINS[index]}
                                 </Text>
                                 <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                    color: currentTheme === 'dark' ? 'white' : '#333',
                                 }]}>
                                     {nutrients[`Vitamin ${KEY_VITAMINS[index]}`]}
                                 </Text>
