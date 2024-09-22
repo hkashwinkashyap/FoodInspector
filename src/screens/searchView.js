@@ -63,8 +63,8 @@ const SearchView = () => {
                 }}
                 foodItemName={selectedFoodItemName}
                 foodItem={selectedFoodItem}
-                width={0.9 * screenWidth()}
-                height={0.8 * screenHeight()}
+                width={'92%'}
+                height={'90%'}
                 backgroundColor={currentTheme === 'dark' ? '#333' : '#f0f0f0'}
             />
             {/* Search Input */}
@@ -80,8 +80,16 @@ const SearchView = () => {
                     value={query}
                     onChangeText={handleSearch}
                     inputMode={'search'}
-                    keyboardAppearance={currentTheme}
                 />
+                {query !== null && query.length > 0 ? (
+                    <TouchableOpacity onPress={() => {
+                        setQuery('');
+                        setSuggestions([]);
+                        focusSearchInput();
+                    }}>
+                        <Icon name="close-outline" size={DEFAULT_PROPS.LG_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                    </TouchableOpacity>
+                ) : null}
             </View>
 
             {/* Suggestions List */}

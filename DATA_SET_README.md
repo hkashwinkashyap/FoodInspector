@@ -11,6 +11,7 @@ Monounsaturated Fats( in g): Amount of monounsaturated fats (considered heart-he
 Polyunsaturated Fats( in g): Amount of polyunsaturated fats (include essential fats your body needs but can't produce itself) in grams per 100 grams.
 
 Carbohydrates( in g): Total carbohydrates in grams per 100 grams, including sugars.
+
 Sugars( in g): Total sugars in grams per 100 grams, a subset of carbohydrates.
 
 Protein( in g): Total proteins in grams per 100 grams, essential for body repair and growth.

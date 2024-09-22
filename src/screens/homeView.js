@@ -1,11 +1,13 @@
-import { Animated, Easing, Image, PanResponder, StyleSheet, Text, View } from "react-native"
+import { Animated, Easing, Image, PanResponder, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useCallback, useEffect, useRef, useState } from "react";
 import { setMacrosData as setMacrosDataInStore } from "../utils/store";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadCSV, screenHeight, screenWidth } from "../utils/functions";
-import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_VITAMINS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
+import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_NUTRIENTS_UNITS, KEY_VITAMINS, KEY_VITAMINS_UNITS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
 import axios from "axios";
+import FoodItemFullDetails from "../components/foodItemFullDetails";
+import Icon from "react-native-vector-icons/Ionicons";
 
 const HomeView = () => {
     const dispatch = useDispatch();
@@ -22,6 +24,10 @@ const HomeView = () => {
     const [image, setImage] = useState()
 
     const [loading, setLoading] = useState(true)
+
+    const [foodItemModalVisible, setFoodItemModalVisible] = useState(false);
+    const [selectedFoodItem, setSelectedFoodItem] = useState({});
+    const [selectedFoodItemName, setSelectedFoodItemName] = useState('');
 
 
     useEffect(() => {
@@ -81,6 +87,12 @@ const HomeView = () => {
         return array;
     };
 
+    const handleViewMore = (foodItem) => {
+        setFoodItemModalVisible(true);
+        setSelectedFoodItem(macrosData[foodItem]);
+        setSelectedFoodItemName(foodItem);
+    };
+
     const getFoodItemCard = (item) => {
         const nutrients = macrosData[item];
 
@@ -92,43 +104,142 @@ const HomeView = () => {
                 <Text style={[styles.foodName, {
                     color: currentTheme === 'dark' ? 'white' : '#333',
                 }]}>{item}</Text>
-                <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.4}>
+                <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.3}>
                     {!loading ? (
-                        <Image source={{ uri: image }} width={'100%'} height={screenHeight() * 0.4} />
+                        <Image source={{ uri: image }} width={'100%'} height={'100%'} />
                     ) : (
                         <Text>Loading...</Text>
                     )}
-
                 </View>
                 <View flexDirection={'column'}>
-                    <View style={styles.nutrientContainer} flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'}>
-                        {(KEY_NUTRIENTS).map((_, index) => (
-                            <View key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
-                                <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : '#333',
+                    <View style={styles.nutrientContainer}>
+                        <View flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'} marginBottom={5}>
+                            <Text style={[styles.nutrientHeading, {
+                                color: currentTheme === 'dark' ? 'white' : '#333',
+                                marginVertical: 4,
+                            }]}>Nutrition Information</Text>
+                            <TouchableOpacity onPress={() => {
+                                handleViewMore(item);
+                            }}
+                                style={[styles.addToMealButton, {
+                                    borderColor: currentTheme === 'dark' ? 'white' : 'black',
                                 }]}>
-                                    {KEY_NUTRIENTS[index]}
-                                </Text>
-                                <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : '#333',
-                                }]}>
-                                    {nutrients[KEY_NUTRIENTS[index] === 'Calories' ? 'Caloric Value' : KEY_NUTRIENTS[index]]}
-                                </Text>
-                                <View marginVertical={10} />
-                                <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : '#333',
-                                }]}>
-                                    Vitamin {KEY_VITAMINS[index]}
-                                </Text>
-                                <Text style={[styles.nutrientText, {
-                                    color: currentTheme === 'dark' ? 'white' : '#333',
-                                }]}>
-                                    {nutrients[`Vitamin ${KEY_VITAMINS[index]}`]}
-                                </Text>
-                            </View>
-                        ))}
+                                <View flexDirection={'row'} alignItems={'center'}>
+                                    <Text style={[styles.buttonText, {
+                                        color: currentTheme === 'dark' ? 'white' : 'black',
+                                        fontWeight: 600,
+                                    }]}>
+                                        View More
+                                    </Text>
+                                    <View style={{ marginLeft: 2 }} />
+                                    <Icon name="information-circle-outline" size={DEFAULT_PROPS.XL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                        <View flexDirection={'row'} alignItems={'flex-end'}>
+                            <Text style={[styles.nutrientText, {
+                                color: currentTheme === 'dark' ? 'white' : '#333',
+                                marginVertical: 4,
+                            }]}>Macro Nutrients</Text>
+                            <Text style={[styles.nutrientUnitsText, {
+                                color: currentTheme === 'dark' ? 'white' : '#333',
+                                marginVertical: 6,
+                            }]}>(per 100g)</Text>
+                        </View>
+                        {/* Nutrients */}
+                        <View
+                            flexDirection={'row'}
+                            borderRadius={10}
+                            borderWidth={1}
+                            width={'100%'}
+                            marginVertical={10}
+                            padding={6}
+                            borderColor={currentTheme === 'dark' ? 'white' : '#333'}
+                            alignItems={'center'}>
+                            {(KEY_NUTRIENTS).map((_, index) => (
+                                <View width={'25%'} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
+                                    <View>
+                                        <Text style={[styles.nutrientText, {
+                                            color: currentTheme === 'dark' ? 'white' : '#333',
+                                        }]}>
+                                            {KEY_NUTRIENTS[index]}
+                                        </Text>
+                                        <View flexDirection={'row'} alignItems={'flex-end'} justifyContent={'center'}>
+                                            <Text style={[styles.nutrientText, {
+                                                color: currentTheme === 'dark' ? 'white' : '#333',
+                                            }]}>
+                                                {nutrients[KEY_NUTRIENTS[index] === 'Calories' ? 'Caloric Value' : KEY_NUTRIENTS[index]]}
+                                            </Text>
+                                            <Text style={[styles.nutrientUnitsText, {
+                                                color: currentTheme === 'dark' ? 'white' : '#333',
+                                            }
+                                            ]}>
+                                                {KEY_NUTRIENTS[index] === 'Calories' ? KEY_NUTRIENTS_UNITS[0] : KEY_NUTRIENTS_UNITS[1]}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
+                        <View marginVertical={4} />
+                        {/* Vitamins */}
+                        <View flexDirection={'row'} alignItems={'flex-end'}>
+                            <Text style={[styles.nutrientText, {
+                                color: currentTheme === 'dark' ? 'white' : '#333',
+                                marginVertical: 4,
+                            }]}>Vitamins</Text>
+                        </View>
+                        <View
+                            flexDirection={'row'}
+                            borderRadius={10}
+                            borderWidth={1}
+                            width={'100%'}
+                            marginVertical={10}
+                            padding={6}
+                            borderColor={currentTheme === 'dark' ? 'white' : '#333'}
+                            alignItems={'center'}>
+                            {(KEY_VITAMINS).map((_, index) => (
+                                <View width={'25%'} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
+                                    <Text style={[styles.nutrientText, {
+                                        color: currentTheme === 'dark' ? 'white' : '#333',
+                                    }]}>
+                                        {KEY_VITAMINS[index]}
+                                    </Text>
+                                    <View flexDirection={'row'} alignItems={'flex-end'} justifyContent={'center'}>
+                                        <Text style={[styles.nutrientText, {
+                                            color: currentTheme === 'dark' ? 'white' : '#333',
+                                        }]}>
+                                            {nutrients[`Vitamin ${KEY_VITAMINS[index]}`]}
+                                        </Text>
+                                        <Text style={[styles.nutrientUnitsText, {
+                                            color: currentTheme === 'dark' ? 'white' : '#333',
+                                        }
+                                        ]}>
+                                            {KEY_VITAMINS_UNITS}
+                                        </Text>
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
                     </View>
                 </View>
+
+                {/* TODO addToMeal */}
+                <TouchableOpacity onPress={() => { }}
+                    style={[styles.addToMealButton, {
+                        borderColor: currentTheme === 'dark' ? 'white' : 'black',
+                    }]}>
+                    <View flexDirection={'row'} alignItems={'center'}>
+                        <Text style={[styles.buttonText, {
+                            color: currentTheme === 'dark' ? 'white' : 'black',
+                            fontWeight: 600,
+                        }]}>
+                            Add to Meal
+                        </Text>
+                        <View style={{ marginLeft: 2 }} />
+                        <Icon name="add-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                    </View>
+                </TouchableOpacity>
             </View>
         );
     };
@@ -213,7 +324,21 @@ const HomeView = () => {
     return (
         <SafeAreaView style={[styles.safeArea, {
             backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
-        }]}>
+        }]}
+        >
+            <FoodItemFullDetails
+                visible={foodItemModalVisible}
+                onClose={() => {
+                    setFoodItemModalVisible(false);
+                    setSelectedFoodItem({});
+                    setSelectedFoodItemName('');
+                }}
+                foodItemName={selectedFoodItemName}
+                foodItem={selectedFoodItem}
+                width={'92%'}
+                height={'90%'}
+                backgroundColor={currentTheme === 'dark' ? '#333' : '#f0f0f0'}
+            />
             {randomItems.length > 0 && (
                 <Animated.View
                     style={[
@@ -265,8 +390,28 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         marginVertical: 10,
     },
+    nutrientHeading: {
+        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
+        marginVertical: 4,
+        fontWeight: 500,
+    },
     nutrientText: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         marginVertical: 4,
     },
+    nutrientUnitsText: {
+        fontSize: DEFAULT_PROPS.MD_FONT_SIZE,
+        marginVertical: 6,
+        paddingLeft: 2,
+    },
+    addToMealButton: {
+        paddingHorizontal: 10,
+        borderRadius: 10,
+        borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    buttonText: {
+        marginVertical: 5,
+    }
 });
