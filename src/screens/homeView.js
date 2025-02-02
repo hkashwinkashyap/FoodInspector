@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { setMacrosData as setMacrosDataInStore } from "../utils/store";
 import { useDispatch, useSelector } from "react-redux";
 import { LoadCSV, screenHeight, screenWidth } from "../utils/functions";
-import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_NUTRIENTS_UNITS, KEY_VITAMINS, KEY_VITAMINS_UNITS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
+import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_NUTRIENTS_UNITS, KEY_VITAMINS, KEY_VITAMINS_UNITS, MACRO_NUTRIENTS, OTHER_CONSTANTS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
 import axios from "axios";
 import FoodItemFullDetails from "../components/foodItemFullDetails";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -29,11 +29,11 @@ const HomeView = () => {
     const [selectedFoodItem, setSelectedFoodItem] = useState({});
     const [selectedFoodItemName, setSelectedFoodItemName] = useState('');
 
-
     useEffect(() => {
         const loadMacrosData = async () => {
             // Dispatch the combined data to Redux store
-            dispatch(setMacrosDataInStore(await LoadCSV()));
+            const combinedMacrosData = await LoadCSV();
+            dispatch(setMacrosDataInStore(combinedMacrosData));
         }
 
         loadMacrosData()
@@ -157,12 +157,12 @@ const HomeView = () => {
                             borderColor={currentTheme === 'dark' ? 'white' : '#333'}
                             alignItems={'center'}>
                             {(KEY_NUTRIENTS).map((_, index) => (
-                                <View width={'25%'} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
+                                <View width={`${100 / KEY_NUTRIENTS.length}%`} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
                                     <View>
                                         <Text style={[styles.nutrientText, {
                                             color: currentTheme === 'dark' ? 'white' : '#333',
                                         }]}>
-                                            {KEY_NUTRIENTS[index]}
+                                            {KEY_NUTRIENTS[index] === MACRO_NUTRIENTS.DIETARY_FIBER ? 'Fiber' : KEY_NUTRIENTS[index]}
                                         </Text>
                                         <View flexDirection={'row'} alignItems={'flex-end'} justifyContent={'center'}>
                                             <Text style={[styles.nutrientText, {
@@ -199,7 +199,7 @@ const HomeView = () => {
                             borderColor={currentTheme === 'dark' ? 'white' : '#333'}
                             alignItems={'center'}>
                             {(KEY_VITAMINS).map((_, index) => (
-                                <View width={'25%'} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
+                                <View width={`${100 / KEY_VITAMINS.length}%`} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
                                     <Text style={[styles.nutrientText, {
                                         color: currentTheme === 'dark' ? 'white' : '#333',
                                     }]}>

@@ -15,6 +15,7 @@ export const KEY_NUTRIENTS = [
     'Protein',
     'Fat',
     'Sugars',
+    'Dietary Fiber',
 ];
 
 export const KEY_NUTRIENTS_UNITS = [
@@ -23,6 +24,7 @@ export const KEY_NUTRIENTS_UNITS = [
 ]
 
 export const KEY_VITAMINS = [
+    'A',
     'D',
     'C',
     'B6',

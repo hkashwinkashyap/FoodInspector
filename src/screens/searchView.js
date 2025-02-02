@@ -33,7 +33,7 @@ const SearchView = () => {
             item.toLowerCase().includes(text.toLowerCase())
         );
 
-        setSuggestions(filteredSuggestions);
+        setSuggestions(filteredSuggestions.sort());
     };
 
     const focusSearchInput = () => {
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
         paddingVertical: 8,
+        marginHorizontal: 10,
         marginBottom: 20,
     },
     searchInput: {
