@@ -1,6 +1,8 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Dimensions } from 'react-native';
 import { readString } from 'react-native-csv';
 import RNFS from 'react-native-fs';
+import { setSavedMeals } from './store';
 
 
 export const ParseCSV = (csvContent) => {
@@ -118,4 +120,42 @@ export const screenWidth = () => {
  */
 export const screenHeight = () => {
     return Dimensions.get('window').height;
+};
+
+// Load Meals from AsyncStorage on App Start
+export const loadSavedMeals = () => async (dispatch) => {
+    try {
+        const storedMeals = await AsyncStorage.getItem('meals');
+        const meals = storedMeals ? JSON.parse(storedMeals) : [];
+        dispatch(setSavedMeals(meals));
+    } catch (error) {
+        console.error("Error loading meals:", error);
+    }
+};
+
+// Generate Meal Name (Based on Time & Count)
+export const getMealPeriod = () => {
+    const hours = new Date().getHours();
+    if (hours < 12) return 'morning';
+    if (hours < 17) return 'afternoon';
+    if (hours < 21) return 'evening';
+    return 'night';
+};
+
+export const getFormattedDate = () => {
+    const today = new Date();
+    return `${today.getDate()}-${today.getMonth() + 1}-${today.getFullYear()}`;
+};
+
+export const generateMealName = (existingMeals) => {
+    const period = getMealPeriod();
+    const date = getFormattedDate();
+    const filteredMeals = existingMeals.filter(meal => meal.name.includes(`${period}-meal-${date}`));
+
+    let mealNumber = filteredMeals.length + 1;
+    let suffix = mealNumber === 1 ? '' : `${mealNumber}th-`;
+    if (mealNumber === 2) suffix = '2nd-';
+    if (mealNumber === 3) suffix = '3rd-';
+
+    return `${suffix}${period}-meal-${date}`;
 };

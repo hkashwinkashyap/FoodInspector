@@ -1,9 +1,9 @@
-import { Animated, Easing, Image, PanResponder, StyleSheet, Text, TouchableOpacity, View } from "react-native"
+import { Animated, Easing, Image, ImageBackground, PanResponder, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useCallback, useEffect, useRef, useState } from "react";
-import { setMacrosData as setMacrosDataInStore } from "../utils/store";
+import { addToMeal, setMacrosData as setMacrosDataInStore } from "../utils/store";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadCSV, screenHeight, screenWidth } from "../utils/functions";
+import { LoadCSV, loadSavedMeals, LoadSavedMeals, screenHeight, screenWidth } from "../utils/functions";
 import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_NUTRIENTS_UNITS, KEY_VITAMINS, KEY_VITAMINS_UNITS, MACRO_NUTRIENTS, OTHER_CONSTANTS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
 import axios from "axios";
 import FoodItemFullDetails from "../components/foodItemFullDetails";
@@ -37,6 +37,7 @@ const HomeView = () => {
         }
 
         loadMacrosData()
+        dispatch(loadSavedMeals())
     }, [dispatch]);
 
     useEffect(() => {
@@ -106,9 +107,20 @@ const HomeView = () => {
                 }]}>{item}</Text>
                 <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.3}>
                     {!loading ? (
-                        <Image source={{ uri: image }} width={'100%'} height={'100%'} />
+                        <ImageBackground
+                            source={{ uri: image }}
+                            style={{ width: '100%', height: '100%' }}
+                            imageStyle={{ borderRadius: 10 }}
+                        >
+                            {/* Overlay text box */}
+                            <View style={styles.overlayTextBox}>
+                                <Text style={styles.overlayText}>
+                                    {DEFAULT_PROPS.imageOverlayText}
+                                </Text>
+                            </View>
+                        </ImageBackground>
                     ) : (
-                        <Text>Loading...</Text>
+                        <Text>{DEFAULT_PROPS.loadingText}.</Text>
                     )}
                 </View>
                 <View flexDirection={'column'}>
@@ -225,7 +237,10 @@ const HomeView = () => {
                 </View>
 
                 {/* TODO addToMeal */}
-                <TouchableOpacity onPress={() => { }}
+                <TouchableOpacity onPress={() => {
+                    // Add to meal
+                    dispatch(addToMeal({ item: item, nutrients: nutrients }));
+                }}
                     style={[styles.addToMealButton, {
                         borderColor: currentTheme === 'dark' ? 'white' : 'black',
                     }]}>
@@ -368,7 +383,8 @@ const styles = StyleSheet.create({
     image: {
         borderRadius: 10,
         overflow: 'hidden',
-        marginVertical: 10
+        marginVertical: 10,
+        position: 'relative',
     },
     foodCard: {
         padding: 20,
@@ -413,5 +429,19 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         marginVertical: 5,
-    }
+    },
+    overlayTextBox: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        backgroundColor: DEFAULT_PROPS.imageOverlayBlur,
+        padding: 10,
+        borderRadius: 5,
+        blurRadius: 5,
+    },
+    overlayText: {
+        color: 'white',
+        fontSize: DEFAULT_PROPS.SM_FONT_SIZE,
+        fontWeight: 'bold',
+    },
 });

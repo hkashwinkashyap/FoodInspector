@@ -35,7 +35,8 @@ const FoodItemFullDetails = ({ foodItemName, foodItem, visible, width, height, b
                         <Text style={[styles.nutrientText, {
                             color: backgroundColor === '#333' ? 'white' : 'black',
                         }]}>
-                            {nutrients[key] === 'Caloric Value' ? 'Calories' : nutrients[key]}
+                            {nutrients[key] === 'Caloric Value' ? 'Calories' :
+                                nutrients[key] === 'Dietary Fiber' ? 'Fiber' : nutrients[key]}
                         </Text>
                     </View>
                     <View style={{ width: '20%', flexDirection: 'row' }}>
