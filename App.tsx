@@ -6,7 +6,6 @@ import {NavigationContainer} from '@react-navigation/native';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import SettingsView from './src/screens/settingsView';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import MealHistoryView from './src/screens/meanHistoryView';
 import SearchView from './src/screens/searchView';
 import {DEFAULT_PROPS} from './src/utils/constants';
 import {Provider} from 'react-redux';
@@ -14,6 +13,7 @@ import store, {
   setColourTheme as setColourThemeInStore,
 } from './src/utils/store';
 import Icon from 'react-native-vector-icons/Ionicons';
+import ExploreView from './src/screens/exploreView';
 
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -47,8 +47,8 @@ function App(): React.JSX.Element {
                 case 'Search':
                   iconName = 'search-outline';
                   break;
-                case 'Meal History':
-                  iconName = 'file-tray-full-outline';
+                case 'Explore':
+                  iconName = 'telescope-outline';
                   break;
                 case 'Settings':
                   iconName = 'settings-outline';
@@ -102,8 +102,8 @@ function App(): React.JSX.Element {
             }}
           />
           <Tab.Screen
-            name="Meal History"
-            component={MealHistoryView}
+            name="Explore"
+            component={ExploreView}
             options={{
               headerShown: false,
             }}

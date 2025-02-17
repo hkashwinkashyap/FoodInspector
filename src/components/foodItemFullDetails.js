@@ -4,9 +4,22 @@ import { screenHeight, screenWidth } from '../utils/functions';
 import { DEFAULT_PROPS, KEY_NUTRIENTS_UNITS, MACRO_NUTRIENTS, MICRO_NUTRIENTS, OTHER_CONSTANTS, VITAMINS } from '../utils/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { addToMeal } from '../utils/store';
 
-const FoodItemFullDetails = ({ foodItemName, foodItem, visible, width, height, backgroundColor, onClose }) => {
+const FoodItemFullDetails = ({
+    foodItemName,
+    foodItem,
+    visible,
+    width,
+    height,
+    backgroundColor,
+    onClose
+}) => {
     const scrollIndicator = useRef();
+
+    const dispatch = useDispatch();
+
 
     useEffect(() => {
         if (visible) {
@@ -92,8 +105,12 @@ const FoodItemFullDetails = ({ foodItemName, foodItem, visible, width, height, b
                             {renderNutrients('Micronutrients', MICRO_NUTRIENTS, 'mg')}
                             {renderNutrients('Other', OTHER_CONSTANTS)}
                         </ScrollView>
-                        {/* TODO addToMeal */}
-                        <TouchableOpacity onPress={() => { }}
+
+                        {/* Add to meal */}
+                        <TouchableOpacity onPress={() => {
+                            // Add to meal
+                            dispatch(addToMeal({ itemName: foodItemName, nutrients: foodItem }));
+                        }}
                             style={[styles.addToMealButton, {
                                 borderColor: backgroundColor === '#333' ? 'white' : 'black',
                             }]}>

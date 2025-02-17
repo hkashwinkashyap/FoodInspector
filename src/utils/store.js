@@ -50,21 +50,26 @@ const mealSlice = createSlice({
     reducers: {
         // Add Food to Meal (Updates Nutrition)
         addToMeal(state, action) {
-            const { item, nutrients } = action.payload; // Extract item & nutrients
+            const { itemName, nutrients } = action.payload; // Extract item & nutrients
 
-            // Convert nutrients' string values to numbers
+            // Convert nutrients' string values to numbers and round to 2 decimal places
             const parsedNutrients = {};
             Object.keys(nutrients).forEach((key) => {
-                parsedNutrients[key] = isNaN(nutrients[key]) ? nutrients[key] : parseFloat(nutrients[key]);
+                if (!isNaN(nutrients[key])) {
+                    parsedNutrients[key] = parseFloat(nutrients[key]).toFixed(2);
+                    parsedNutrients[key] = parseFloat(parsedNutrients[key]); // Convert back to number
+                } else {
+                    parsedNutrients[key] = nutrients[key];
+                }
             });
 
             // Add item to the meal list
-            state.items.push({ item: item, nutrients: parsedNutrients });
+            state.items.push({ itemName: itemName, nutrients: parsedNutrients });
 
             // Update total nutrition dynamically
             Object.keys(parsedNutrients).forEach((key) => {
                 if (typeof parsedNutrients[key] === 'number' && !isNaN(parsedNutrients[key])) {
-                    state.totalNutrition[key] = (state.totalNutrition[key] || 0) + parsedNutrients[key];
+                    state.totalNutrition[key] = parseFloat(((state.totalNutrition[key] || 0) + parsedNutrients[key]).toFixed(2));
                 }
             });
 
