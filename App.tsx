@@ -14,6 +14,7 @@ import store, {
 } from './src/utils/store';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ExploreView from './src/screens/exploreView';
+import CreateMealScreen from './src/screens/createMealScreen';
 
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -113,6 +114,14 @@ function App(): React.JSX.Element {
             component={SettingsView}
             options={{
               headerShown: false,
+            }}
+          />
+          <Tab.Screen
+            name="CreateMealScreen"
+            component={CreateMealScreen}
+            options={{
+              headerShown: true,
+              title: 'Meal Summary',
             }}
           />
         </Tab.Navigator>

@@ -4,12 +4,15 @@ import { useSelector } from "react-redux";
 import Icon from "react-native-vector-icons/Ionicons";
 import { DEFAULT_PROPS } from "../utils/constants";
 import { Badge } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
 
 const MealBasket = () => {
     const mealItems = useSelector(state => state.meal.items); // Redux state
     const slideAnim = React.useRef(new Animated.Value(300)).current; // Initial hidden position
 
     const currentTheme = useSelector((state) => state.colourTheme.currentTheme);
+
+    const navigation = useNavigation()
 
     // Animate in/out
     React.useEffect(() => {
@@ -25,7 +28,7 @@ const MealBasket = () => {
         { transform: [{ translateX: slideAnim }] },
         { backgroundColor: currentTheme === "dark" ? "#333" : "#E0E0E0" }
         ]}>
-            <TouchableOpacity style={styles.toggleButton} onPress={() => { }}>
+            <TouchableOpacity style={styles.toggleButton} onPress={() => navigation.navigate("CreateMealScreen")}>
                 <Icon name="restaurant-outline" size={DEFAULT_PROPS.XL_FONT_SIZE}
                     color={currentTheme === "dark" ?
                         DEFAULT_PROPS.tabBarBackgroundColorLightMode
