@@ -7,6 +7,7 @@ import moment from 'moment';
 import { ProgressBar } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { DAILY_INTAKE, DAILY_INTAKE_UNITS, DEFAULT_PROPS } from '../utils/constants';
+import MealBasket from '../components/mealBasket';
 
 const HomeView = () => {
     const currentTheme = useSelector(state => state.colourTheme.currentTheme);
@@ -128,6 +129,7 @@ const HomeView = () => {
                     )}
                 </View>
             </ScrollView>
+            <MealBasket />
         </SafeAreaView>
     );
 };
@@ -142,7 +144,7 @@ const styles = StyleSheet.create({
         gap: 10,
     },
     contentContainer: {
-        paddingTop: 20,
+        paddingTop: 10,
         paddingBottom: 40,
     },
     section: {

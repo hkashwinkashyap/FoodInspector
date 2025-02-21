@@ -64,8 +64,8 @@ function App(): React.JSX.Element {
                 case 'Explore':
                   iconName = 'telescope-outline';
                   break;
-                case 'Settings':
-                  iconName = 'settings-outline';
+                case 'Meal History':
+                  iconName = 'file-tray-full-outline';
                   break;
                 default:
                   iconName = 'home-outline';
@@ -125,11 +125,11 @@ function App(): React.JSX.Element {
             }}
           />
           <Tab.Screen
-            name="Settings"
+            name="Meal History"
             component={SettingsView}
             options={{
               headerShown: false,
-              title: 'Settings',
+              title: 'Meal History',
             }}
           />
           <Tab.Screen

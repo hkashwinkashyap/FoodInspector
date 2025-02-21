@@ -77,27 +77,34 @@ const mealSlice = createSlice({
             console.log('Total Nutrition:', state.totalNutrition);
         },
 
-        // Remove Food from Meal
+        // Remove Food from Meal (Updates Nutrition)
         removeFromMeal(state, action) {
-            const { item, nutrients } = action.payload; // Extract item & nutrients
+            console.log('Removing from meal:', action.payload);
 
-            // Convert nutrients' string values to numbers
-            const parsedNutrients = {};
-            Object.keys(nutrients).forEach((key) => {
-                parsedNutrients[key] = isNaN(nutrients[key]) ? nutrients[key] : parseFloat(nutrients[key]);
-            });
+            const itemName = action.payload; // Extract item name
+            const itemIndex = state.items.findIndex((item) => item.itemName === itemName);
 
-            // Subtract nutrition for the removed item
-            Object.keys(parsedNutrients).forEach((key) => {
-                if (typeof parsedNutrients[key] === 'number' && !isNaN(parsedNutrients[key])) {
-                    state.totalNutrition[key] = Math.max((state.totalNutrition[key] || 0) - parsedNutrients[key], 0);
+            if (itemIndex === -1) {
+                console.warn(`Item ${itemName} not found in meal.`);
+                return;
+            }
+
+            // Get the first matching item to remove
+            const itemToRemove = state.items[itemIndex];
+
+            // Subtract its nutrients from totalNutrition
+            Object.keys(itemToRemove.nutrients).forEach((key) => {
+                if (typeof itemToRemove.nutrients[key] === 'number' && !isNaN(itemToRemove.nutrients[key])) {
+                    state.totalNutrition[key] = parseFloat(Math.max((state.totalNutrition[key] || 0) - itemToRemove.nutrients[key], 0).toFixed(2));
                 }
             });
 
-            // Remove the item from the meal
-            state.items = state.items.filter(existingItem => existingItem.food !== item.food);
-        },
+            // Remove only ONE instance of the item
+            state.items.splice(itemIndex, 1);
 
+            console.log('Updated Items:', state.items);
+            console.log('Updated Total Nutrition:', state.totalNutrition);
+        },
 
         // Clear Current Meal
         clearMeal(state) {
