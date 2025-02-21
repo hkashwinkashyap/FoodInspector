@@ -120,27 +120,56 @@ const mealSlice = createSlice({
 export const { addToMeal, removeFromMeal, clearMeal, setSavedMeals, addNewMeal } = mealSlice.actions;
 export const mealReducer = mealSlice.reducer;
 
-// Async Function to Save Meals
 export const createMeal = () => async (dispatch, getState) => {
     const { meal } = getState();
 
-    // Get existing meals
+    // Get existing meals from AsyncStorage
     const storedMeals = await AsyncStorage.getItem('meals');
     const meals = storedMeals ? JSON.parse(storedMeals) : [];
 
     // Generate unique meal name
     const mealName = generateMealName(meals);
 
-    // Create meal object
-    const newMeal = { name: mealName, items: meal.items, totalNutrition: meal.totalNutrition };
+    // Create new meal object with timestamp
+    const newMeal = {
+        name: mealName,
+        items: meal.items,
+        totalNutrition: meal.totalNutrition,
+        timestamp: new Date().toISOString() // Add timestamp
+    };
+
     const updatedMeals = [...meals, newMeal];
 
-    // Save meal to AsyncStorage
+    // Save updated meals to AsyncStorage
     await AsyncStorage.setItem('meals', JSON.stringify(updatedMeals));
 
-    // Clear Redux meal state
-    dispatch(clearMeal());
+    // Update Redux state
+    dispatch(setSavedMeals(updatedMeals));  // Update saved meals in Redux
+    dispatch(clearMeal()); // Clear current meal
 };
+
+// Function to load meals from AsyncStorage on app startup
+export const loadSavedMeals = () => async (dispatch) => {
+    const storedMeals = await AsyncStorage.getItem('meals');
+    const meals = storedMeals ? JSON.parse(storedMeals) : [];
+
+    dispatch(setSavedMeals(meals)); // Update Redux state
+};
+
+const navigationSlice = createSlice({
+    name: "navigation",
+    initialState: {
+        lastTab: "Home", // Default to Home
+    },
+    reducers: {
+        setLastTab: (state, action) => {
+            state.lastTab = action.payload;
+        },
+    },
+});
+
+export const { setLastTab } = navigationSlice.actions;
+export const navigationReducer = navigationSlice.reducer;
 
 // Configure Redux Store
 const store = configureStore({
@@ -148,6 +177,7 @@ const store = configureStore({
         macrosData: macrosDataReducer,
         colourTheme: colourThemeReducer,
         meal: mealReducer,
+        navigation: navigationReducer
     },
 });
 

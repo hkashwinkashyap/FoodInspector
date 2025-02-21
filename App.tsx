@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {TouchableOpacity, useColorScheme} from 'react-native';
-
+import {setMacrosData as setMacrosDataInStore} from './src/utils/store';
 import HomeView from './src/screens/homeView';
 import {NavigationContainer} from '@react-navigation/native';
 // import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -10,20 +10,33 @@ import SearchView from './src/screens/searchView';
 import {DEFAULT_PROPS} from './src/utils/constants';
 import {Provider} from 'react-redux';
 import store, {
+  loadSavedMeals,
   setColourTheme as setColourThemeInStore,
 } from './src/utils/store';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ExploreView from './src/screens/exploreView';
 import CreateMealScreen from './src/screens/createMealScreen';
+import {LoadCSV} from './src/utils/functions';
 
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function App(): React.JSX.Element {
-  const dispath = store.dispatch;
+  const dispatch = store.dispatch;
 
   const colorScheme = useColorScheme();
-  dispath(setColourThemeInStore(colorScheme));
+  dispatch(setColourThemeInStore(colorScheme));
+
+  useEffect(() => {
+    const loadMacrosData = async () => {
+      // Dispatch the combined data to Redux store
+      const combinedMacrosData = await LoadCSV();
+      dispatch(setMacrosDataInStore(combinedMacrosData));
+    };
+
+    loadMacrosData();
+    dispatch(loadSavedMeals());
+  }, []);
 
   return (
     <Provider store={store}>
@@ -100,6 +113,7 @@ function App(): React.JSX.Element {
             component={SearchView}
             options={{
               headerShown: false,
+              title: 'Search',
             }}
           />
           <Tab.Screen
@@ -107,6 +121,7 @@ function App(): React.JSX.Element {
             component={ExploreView}
             options={{
               headerShown: false,
+              title: 'Explore',
             }}
           />
           <Tab.Screen
@@ -114,13 +129,14 @@ function App(): React.JSX.Element {
             component={SettingsView}
             options={{
               headerShown: false,
+              title: 'Settings',
             }}
           />
           <Tab.Screen
             name="CreateMealScreen"
             component={CreateMealScreen}
             options={{
-              headerShown: true,
+              headerShown: false,
               title: 'Meal Summary',
             }}
           />

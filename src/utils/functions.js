@@ -122,17 +122,6 @@ export const screenHeight = () => {
     return Dimensions.get('window').height;
 };
 
-// Load Meals from AsyncStorage on App Start
-export const loadSavedMeals = () => async (dispatch) => {
-    try {
-        const storedMeals = await AsyncStorage.getItem('meals');
-        const meals = storedMeals ? JSON.parse(storedMeals) : [];
-        dispatch(setSavedMeals(meals));
-    } catch (error) {
-        console.error("Error loading meals:", error);
-    }
-};
-
 // Generate Meal Name (Based on Time & Count)
 export const getMealPeriod = () => {
     const hours = new Date().getHours();

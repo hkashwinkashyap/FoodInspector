@@ -83,3 +83,19 @@ export const MICRO_NUTRIENTS = {
 export const OTHER_CONSTANTS = {
     NUTRITION_DENSITY: 'Nutrition Density',
 };
+
+export const DAILY_INTAKE = {
+    "Calories": 2000, "Protein": 50, "Carbohydrates": 275, "Fat": 70,
+    "Vitamin A": 900, "Vitamin B12": 2.4, "Vitamin D": 20, "Iron": 18, "Calcium": 1000,
+    "Vitamin B1": 1.2, "Vitamin B2": 1.3, "Vitamin B3": 16, "Vitamin B5": 5, "Vitamin B6": 1.3,
+    "Vitamin C": 90, "Vitamin E": 15, "Vitamin K": 120, "Copper": 0.9, "Magnesium": 400,
+    "Manganese": 2.3, "Phosphorus": 700, "Potassium": 4700, "Selenium": 55, "Zinc": 11
+};
+
+export const DAILY_INTAKE_UNITS = {
+    "Calories": "kcal", "Protein": "g", "Carbohydrates": "g", "Fat": "g",
+    "Vitamin A": "µg", "Vitamin B12": "µg", "Vitamin D": "µg", "Iron": "mg", "Calcium": "mg",
+    "Vitamin B1": "mg", "Vitamin B2": "mg", "Vitamin B3": "mg", "Vitamin B5": "mg", "Vitamin B6": "mg",
+    "Vitamin C": "mg", "Vitamin E": "mg", "Vitamin K": "µg", "Copper": "mg", "Magnesium": "mg",
+    "Manganese": "mg", "Phosphorus": "mg", "Potassium": "mg", "Selenium": "µg", "Zinc": "mg"
+};

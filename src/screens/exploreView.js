@@ -1,9 +1,9 @@
 import { Animated, Easing, Image, ImageBackground, PanResponder, StyleSheet, Text, TouchableOpacity, View } from "react-native"
 import { SafeAreaView } from "react-native-safe-area-context"
 import { useCallback, useEffect, useRef, useState } from "react";
-import { addToMeal, setMacrosData as setMacrosDataInStore } from "../utils/store";
+import { addToMeal } from "../utils/store";
 import { useDispatch, useSelector } from "react-redux";
-import { LoadCSV, loadSavedMeals, LoadSavedMeals, screenHeight, screenWidth } from "../utils/functions";
+import { screenHeight } from "../utils/functions";
 import { DEFAULT_PROPS, KEY_NUTRIENTS, KEY_NUTRIENTS_UNITS, KEY_VITAMINS, KEY_VITAMINS_UNITS, MACRO_NUTRIENTS, OTHER_CONSTANTS, PEXELS_API_KEY, PEXELS_API_URL } from "../utils/constants";
 import axios from "axios";
 import FoodItemFullDetails from "../components/foodItemFullDetails";
@@ -29,17 +29,6 @@ const ExploreView = () => {
     const [foodItemModalVisible, setFoodItemModalVisible] = useState(false);
     const [selectedFoodItem, setSelectedFoodItem] = useState({});
     const [selectedFoodItemName, setSelectedFoodItemName] = useState('');
-
-    useEffect(() => {
-        const loadMacrosData = async () => {
-            // Dispatch the combined data to Redux store
-            const combinedMacrosData = await LoadCSV();
-            dispatch(setMacrosDataInStore(combinedMacrosData));
-        }
-
-        loadMacrosData()
-        dispatch(loadSavedMeals())
-    }, [dispatch]);
 
     useEffect(() => {
         if (macrosData && Object.keys(macrosData).length > 0) {

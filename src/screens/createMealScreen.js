@@ -1,15 +1,18 @@
 import React from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, SafeAreaView } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { createMeal } from "../utils/store";
 import { DEFAULT_PROPS } from "../utils/constants";
 import Icon from "react-native-vector-icons/Ionicons";
+import { screenHeight } from "../utils/functions";
 
 const CreateMealScreen = () => {
     const mealItems = useSelector(state => state.meal.items);
     const dispatch = useDispatch();
     const navigation = useNavigation();
+    const currentTheme = useSelector((state) => state.colourTheme.currentTheme);
+    const lastTab = useSelector((state) => state.navigation.lastTab);
 
     // Group items to show count (e.g., "Apple x2")
     const groupedItems = mealItems.reduce((acc, item) => {
@@ -23,44 +26,71 @@ const CreateMealScreen = () => {
     }, []);
 
     // Handle creating meal & navigate home
-    const handleCreateMeal = async () => {
-        await dispatch(createMeal());
+    const handleCreateMeal = () => {
+        dispatch(createMeal());
         navigation.navigate("Home");
     };
 
     return (
-        <View style={styles.container}>
-            {/* Header with Back Button */}
-            <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <Icon name="arrow-back" size={24} color="white" />
+        <SafeAreaView style={[styles.safeArea, {
+            backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
+        }]} >
+            <View style={styles.container}>
+                {/* Header with Back Button */}
+                <View style={styles.header}>
+                    <TouchableOpacity onPress={() => navigation.navigate(lastTab)}>
+                        <Icon name="arrow-back"
+                            size={DEFAULT_PROPS.XL_FONT_SIZE}
+                            color={
+                                currentTheme === "dark" ? "white" : "black"
+                            } />
+                    </TouchableOpacity>
+                    <Text style={[styles.title,
+                    { color: currentTheme === "dark" ? "white" : "black" }
+                    ]}>Meal Summary</Text>
+                </View>
+
+                {/* Meal Items List */}
+                <FlatList
+                    data={groupedItems}
+                    keyExtractor={(item, index) => `${item.itemName}-${index}`}
+                    renderItem={({ item }) => (
+                        <View style={[styles.itemContainer,
+                        {
+                            backgroundColor: currentTheme === "dark" ? "#333" : "#E0E0E0"
+                        }
+                        ]}>
+                            <Text style={[styles.itemText,
+                            {
+                                color: currentTheme === "dark" ? "white" : "black"
+                            }
+                            ]}>{item.itemName} x{item.count}</Text>
+                        </View>
+                    )}
+                />
+
+                {/* Create Meal Button */}
+                <TouchableOpacity style={[styles.createButton, {
+                    borderColor: currentTheme === "dark" ? 'white' : 'black',
+                }]} onPress={handleCreateMeal}>
+                    <Text style={[styles.createButtonText,
+                    {
+                        color: currentTheme === "dark" ? "white" : "black"
+                    }
+                    ]}>Create Meal</Text>
                 </TouchableOpacity>
-                <Text style={styles.title}>Meal Summary</Text>
             </View>
-
-            {/* Meal Items List */}
-            <FlatList
-                data={groupedItems}
-                keyExtractor={(item, index) => `${item.itemName}-${index}`}
-                renderItem={({ item }) => (
-                    <View style={styles.itemContainer}>
-                        <Text style={styles.itemText}>{item.itemName} x{item.count}</Text>
-                    </View>
-                )}
-            />
-
-            {/* Create Meal Button */}
-            <TouchableOpacity style={styles.createButton} onPress={handleCreateMeal}>
-                <Text style={styles.createButtonText}>Create Meal</Text>
-            </TouchableOpacity>
-        </View>
+        </SafeAreaView >
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        height: screenHeight(),
+        flex: 1
+    },
     container: {
         flex: 1,
-        backgroundColor: "#121212",
         padding: 16,
     },
     header: {
@@ -69,30 +99,26 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     title: {
-        fontSize: 20,
-        color: "white",
+        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
         marginLeft: 10,
     },
     itemContainer: {
-        backgroundColor: "#1E1E1E",
         padding: 12,
         marginVertical: 6,
         borderRadius: 8,
     },
     itemText: {
-        color: "white",
-        fontSize: 16,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
     },
     createButton: {
-        backgroundColor: "#FF9800",
-        padding: 12,
-        borderRadius: 8,
-        alignItems: "center",
-        marginTop: 20,
+        borderRadius: 10,
+        borderWidth: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: DEFAULT_PROPS.XS_FONT_SIZE
     },
     createButtonText: {
-        color: "white",
-        fontSize: 18,
+        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
         fontWeight: "bold",
     },
 });
