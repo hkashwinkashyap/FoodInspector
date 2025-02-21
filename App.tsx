@@ -36,7 +36,7 @@ function App(): React.JSX.Element {
 
     loadMacrosData();
     dispatch(loadSavedMeals());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Provider store={store}>
