@@ -38,7 +38,7 @@ const NutrientsCards = ({
             </View>
 
             {/* Micros */}
-            <View style={styles.section}>
+            <View >
                 <Text style={[styles.sectionTitle,
                 { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
                     Micros
@@ -104,10 +104,6 @@ export default NutrientsCards;
 const styles = StyleSheet.create({
     contentContainer: {
         paddingTop: 10,
-        paddingBottom: 40,
-    },
-    section: {
-        marginBottom: 20,
     },
     nutrientTitle: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,

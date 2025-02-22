@@ -80,7 +80,7 @@ const ExploreView = () => {
             // Add to meal
             dispatch(addToMeal({ itemName: foodItemName, nutrients: nutrients }));
             setAddedToMeal(false);
-        }, 2000);
+        }, 1000);
     }
 
     const shuffleArray = (array) => {
@@ -132,7 +132,10 @@ const ExploreView = () => {
                     )}
                 </View> */}
                 <View style={styles.nutrientContainer}>
-                    <View flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'} marginBottom={5}>
+                    <View flexDirection={'row'}
+                        alignItems={'center'}
+                        justifyContent={'space-between'}
+                    >
                         <Text style={[styles.nutrientHeading, {
                             color: currentTheme === 'dark' ? '#ccc' : '#777',
                         }]}>Nutrition Information:</Text>
@@ -156,7 +159,6 @@ const ExploreView = () => {
                     </View>
                     <NutrientsCards totalNutrition={convertedNutrients} hideViewAllMicros={true} />
                 </View>
-
                 {/* Add to meal */}
                 <TouchableOpacity
                     disabled={addedToMeal}
@@ -314,7 +316,7 @@ const styles = StyleSheet.create({
         height: screenHeight(),
     },
     fullViewCard: {
-        height: '80%',
+        height: screenHeight() * 0.8,
     },
     image: {
         borderRadius: 10,
@@ -323,9 +325,9 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     foodCard: {
-        padding: 20,
+        padding: 15,
         marginVertical: 10,
-        marginHorizontal: 15,
+        marginHorizontal: 5,
         borderRadius: 10,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
@@ -340,7 +342,7 @@ const styles = StyleSheet.create({
     },
     nutrientContainer: {
         flexDirection: 'column',
-        marginBottom: -20,
+        paddingBottom: 10,
     },
     nutrientHeading: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,

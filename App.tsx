@@ -3,8 +3,6 @@ import {TouchableOpacity, useColorScheme} from 'react-native';
 import {setMacrosData as setMacrosDataInStore} from './src/utils/store';
 import HomeView from './src/screens/homeView';
 import {NavigationContainer} from '@react-navigation/native';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import SettingsView from './src/screens/settingsView';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import SearchView from './src/screens/searchView';
 import {DEFAULT_PROPS} from './src/utils/constants';
@@ -17,6 +15,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import ExploreView from './src/screens/exploreView';
 import CreateMealScreen from './src/screens/createMealScreen';
 import {LoadCSV} from './src/utils/functions';
+import MealHistoryView from './src/screens/mealHistory';
 
 // const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -126,7 +125,7 @@ function App(): React.JSX.Element {
           />
           <Tab.Screen
             name="Meal History"
-            component={SettingsView}
+            component={MealHistoryView}
             options={{
               headerShown: false,
               title: 'Meal History',

@@ -44,7 +44,6 @@ const HomeView = () => {
                     Here's your meal summary for today:
                 </Text>
             </View>
-
             <NutrientsCards totalNutrition={totalNutrition} />
             <MealBasket />
         </SafeAreaView>
@@ -53,26 +52,12 @@ const HomeView = () => {
 
 const styles = StyleSheet.create({
     safeArea: {
-        height: screenHeight(),
+        height: screenHeight() * 0.95,
         padding: 20,
     },
     header: {
-        marginBottom: 20,
         gap: 10,
-    },
-    contentContainer: {
-        paddingTop: 10,
-        paddingBottom: 40,
-    },
-    section: {
-        marginBottom: 20,
-    },
-    nutrientTitle: {
-        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
-        fontWeight: 'bold',
-    },
-    nutrientValue: {
-        fontSize: DEFAULT_PROPS.MD_FONT_SIZE,
+        marginBottom: 10
     },
     greeting: {
         fontSize: DEFAULT_PROPS.XXL_FONT_SIZE,
@@ -80,31 +65,6 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
-    },
-    sectionTitle: {
-        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    gridContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        justifyContent: 'space-between',
-    },
-    nutrientCard: {
-        padding: 15,
-        borderRadius: 10,
-        marginBottom: 10,
-        width: '48%',
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-        elevation: 3,
-    },
-    progressBar: {
-        height: 8,
-        borderRadius: 4,
-        marginVertical: 5,
     }
 });
 

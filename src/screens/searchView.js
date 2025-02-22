@@ -63,8 +63,8 @@ const SearchView = () => {
                 }}
                 foodItemName={selectedFoodItemName}
                 foodItem={selectedFoodItem}
-                width={'92%'}
-                height={'90%'}
+                width={'90%'}
+                height={'80%'}
                 backgroundColor={currentTheme === 'dark' ? '#333' : '#f0f0f0'}
             />
             {/* Search Input */}
