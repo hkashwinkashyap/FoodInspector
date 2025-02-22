@@ -9,6 +9,7 @@ import axios from "axios";
 import FoodItemFullDetails from "../components/foodItemFullDetails";
 import Icon from "react-native-vector-icons/Ionicons";
 import MealBasket from "../components/mealBasket";
+import NutrientsCards from "../components/nutrientsCards";
 
 const ExploreView = () => {
     const dispatch = useDispatch();
@@ -29,6 +30,8 @@ const ExploreView = () => {
     const [foodItemModalVisible, setFoodItemModalVisible] = useState(false);
     const [selectedFoodItem, setSelectedFoodItem] = useState({});
     const [selectedFoodItemName, setSelectedFoodItemName] = useState('');
+
+    const [addedToMeal, setAddedToMeal] = useState(false);
 
     useEffect(() => {
         if (macrosData && Object.keys(macrosData).length > 0) {
@@ -70,6 +73,16 @@ const ExploreView = () => {
 
     }, [randomItems, currentIndex])
 
+    const handleAddToMeal = (foodItemName, nutrients) => {
+        setAddedToMeal(true);
+
+        setTimeout(() => {
+            // Add to meal
+            dispatch(addToMeal({ itemName: foodItemName, nutrients: nutrients }));
+            setAddedToMeal(false);
+        }, 2000);
+    }
+
     const shuffleArray = (array) => {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -87,6 +100,12 @@ const ExploreView = () => {
     const getFoodItemCard = (item) => {
         const nutrients = macrosData[item];
 
+        const convertedNutrients = Object.fromEntries(
+            Object.entries(nutrients).map(([key, value]) => [key, parseFloat(value)])
+        );
+
+        console.log('Converted Nutrients:', convertedNutrients);
+
         return (
             <View style={[styles.foodCard, {
                 backgroundColor: currentTheme === 'dark' ? '#002021' : 'white',
@@ -95,14 +114,13 @@ const ExploreView = () => {
                 <Text style={[styles.foodName, {
                     color: currentTheme === 'dark' ? 'white' : '#333',
                 }]}>{item}</Text>
-                <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.3}>
+                {/* <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.3}>
                     {!loading ? (
                         <ImageBackground
                             source={{ uri: image }}
                             style={{ width: '100%', height: '100%' }}
                             imageStyle={{ borderRadius: 10 }}
                         >
-                            {/* Overlay text box */}
                             <View style={styles.overlayTextBox}>
                                 <Text style={styles.overlayText}>
                                     {DEFAULT_PROPS.imageOverlayText}
@@ -112,137 +130,64 @@ const ExploreView = () => {
                     ) : (
                         <Text>{DEFAULT_PROPS.loadingText}.</Text>
                     )}
-                </View>
-                <View flexDirection={'column'}>
-                    <View style={styles.nutrientContainer}>
-                        <View flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'} marginBottom={5}>
-                            <Text style={[styles.nutrientHeading, {
-                                color: currentTheme === 'dark' ? 'white' : '#333',
-                                marginVertical: 4,
-                            }]}>Nutrition Information</Text>
-                            <TouchableOpacity onPress={() => {
-                                handleViewMore(item);
-                            }}
-                                style={[styles.addToMealButton, {
-                                    borderColor: currentTheme === 'dark' ? 'white' : 'black',
+                </View> */}
+                <View style={styles.nutrientContainer}>
+                    <View flexDirection={'row'} alignItems={'center'} justifyContent={'space-between'} marginBottom={5}>
+                        <Text style={[styles.nutrientHeading, {
+                            color: currentTheme === 'dark' ? '#ccc' : '#777',
+                        }]}>Nutrition Information:</Text>
+                        <TouchableOpacity onPress={() => {
+                            handleViewMore(item);
+                        }}
+                            style={[styles.addToMealButton, {
+                                borderColor: currentTheme === 'dark' ? 'white' : 'black',
+                            }]}>
+                            <View flexDirection={'row'} alignItems={'center'}>
+                                <Text style={[styles.buttonText, {
+                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                    fontWeight: 600,
                                 }]}>
-                                <View flexDirection={'row'} alignItems={'center'}>
-                                    <Text style={[styles.buttonText, {
-                                        color: currentTheme === 'dark' ? 'white' : 'black',
-                                        fontWeight: 600,
-                                    }]}>
-                                        View More
-                                    </Text>
-                                    <View style={{ marginLeft: 2 }} />
-                                    <Icon name="information-circle-outline" size={DEFAULT_PROPS.XL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        <View flexDirection={'row'} alignItems={'flex-end'}>
-                            <Text style={[styles.nutrientText, {
-                                color: currentTheme === 'dark' ? 'white' : '#333',
-                                marginVertical: 4,
-                            }]}>Macro Nutrients</Text>
-                            <Text style={[styles.nutrientUnitsText, {
-                                color: currentTheme === 'dark' ? 'white' : '#333',
-                                marginVertical: 6,
-                            }]}>(per 100g)</Text>
-                        </View>
-                        {/* Nutrients */}
-                        <View
-                            flexDirection={'row'}
-                            borderRadius={10}
-                            borderWidth={1}
-                            width={'100%'}
-                            marginVertical={10}
-                            padding={6}
-                            borderColor={currentTheme === 'dark' ? 'white' : '#333'}
-                            alignItems={'center'}>
-                            {(KEY_NUTRIENTS).map((_, index) => (
-                                <View width={`${100 / KEY_NUTRIENTS.length}%`} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
-                                    <View>
-                                        <Text style={[styles.nutrientText, {
-                                            color: currentTheme === 'dark' ? 'white' : '#333',
-                                        }]}>
-                                            {KEY_NUTRIENTS[index] === MACRO_NUTRIENTS.DIETARY_FIBER ? 'Fiber' : KEY_NUTRIENTS[index]}
-                                        </Text>
-                                        <View flexDirection={'row'} alignItems={'flex-end'} justifyContent={'center'}>
-                                            <Text style={[styles.nutrientText, {
-                                                color: currentTheme === 'dark' ? 'white' : '#333',
-                                            }]}>
-                                                {nutrients[KEY_NUTRIENTS[index] === 'Calories' ? 'Caloric Value' : KEY_NUTRIENTS[index]]}
-                                            </Text>
-                                            <Text style={[styles.nutrientUnitsText, {
-                                                color: currentTheme === 'dark' ? 'white' : '#333',
-                                            }
-                                            ]}>
-                                                {KEY_NUTRIENTS[index] === 'Calories' ? KEY_NUTRIENTS_UNITS[0] : KEY_NUTRIENTS_UNITS[1]}
-                                            </Text>
-                                        </View>
-                                    </View>
-                                </View>
-                            ))}
-                        </View>
-                        <View marginVertical={4} />
-                        {/* Vitamins */}
-                        <View flexDirection={'row'} alignItems={'flex-end'}>
-                            <Text style={[styles.nutrientText, {
-                                color: currentTheme === 'dark' ? 'white' : '#333',
-                                marginVertical: 4,
-                            }]}>Vitamins</Text>
-                        </View>
-                        <View
-                            flexDirection={'row'}
-                            borderRadius={10}
-                            borderWidth={1}
-                            width={'100%'}
-                            marginVertical={10}
-                            padding={6}
-                            borderColor={currentTheme === 'dark' ? 'white' : '#333'}
-                            alignItems={'center'}>
-                            {(KEY_VITAMINS).map((_, index) => (
-                                <View width={`${100 / KEY_VITAMINS.length}%`} key={`nutrient-${index}`} alignItems={'center'} justifyContent={'center'}>
-                                    <Text style={[styles.nutrientText, {
-                                        color: currentTheme === 'dark' ? 'white' : '#333',
-                                    }]}>
-                                        {KEY_VITAMINS[index]}
-                                    </Text>
-                                    <View flexDirection={'row'} alignItems={'flex-end'} justifyContent={'center'}>
-                                        <Text style={[styles.nutrientText, {
-                                            color: currentTheme === 'dark' ? 'white' : '#333',
-                                        }]}>
-                                            {nutrients[`Vitamin ${KEY_VITAMINS[index]}`]}
-                                        </Text>
-                                        <Text style={[styles.nutrientUnitsText, {
-                                            color: currentTheme === 'dark' ? 'white' : '#333',
-                                        }
-                                        ]}>
-                                            {KEY_VITAMINS_UNITS}
-                                        </Text>
-                                    </View>
-                                </View>
-                            ))}
-                        </View>
+                                    View More
+                                </Text>
+                                <View style={{ marginLeft: 2 }} />
+                                <Icon name="information-circle-outline" size={DEFAULT_PROPS.XL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                            </View>
+                        </TouchableOpacity>
                     </View>
+                    <NutrientsCards totalNutrition={convertedNutrients} hideViewAllMicros={true} />
                 </View>
 
                 {/* Add to meal */}
-                <TouchableOpacity onPress={() => {
-                    // Add to meal
-                    dispatch(addToMeal({ itemName: item, nutrients: nutrients }));
-                }}
+                <TouchableOpacity
+                    disabled={addedToMeal}
+                    onPress={() => handleAddToMeal(item, nutrients)}
                     style={[styles.addToMealButton, {
                         borderColor: currentTheme === 'dark' ? 'white' : 'black',
                     }]}>
                     <View flexDirection={'row'} alignItems={'center'}>
-                        <Text style={[styles.buttonText, {
-                            color: currentTheme === 'dark' ? 'white' : 'black',
-                            fontWeight: 600,
-                        }]}>
-                            Add to Meal
-                        </Text>
-                        <View style={{ marginLeft: 2 }} />
-                        <Icon name="add-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                        {addedToMeal ? (
+                            <>
+                                <Text style={[styles.buttonText, {
+                                    color: currentTheme === 'dark' ? 'white' : 'black',
+                                }]}>
+                                    Added to Meal
+                                </Text>
+                                <View style={{ marginLeft: 2 }} />
+                                <Icon name="checkmark-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                            </>
+                        ) :
+                            (
+                                <>
+                                    <Text style={[styles.buttonText, {
+                                        color: currentTheme === 'dark' ? 'white' : 'black',
+                                        fontWeight: 600,
+                                    }]}>
+                                        Add to Meal
+                                    </Text>
+                                    <View style={{ marginLeft: 2 }} />
+                                    <Icon name="add-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
+                                </>
+                            )}
                     </View>
                 </TouchableOpacity>
             </View>
@@ -340,8 +285,8 @@ const ExploreView = () => {
                 }}
                 foodItemName={selectedFoodItemName}
                 foodItem={selectedFoodItem}
-                width={'92%'}
-                height={'90%'}
+                width={'90%'}
+                height={'80%'}
                 backgroundColor={currentTheme === 'dark' ? '#333' : '#f0f0f0'}
             />
             {randomItems.length > 0 && (
@@ -369,7 +314,7 @@ const styles = StyleSheet.create({
         height: screenHeight(),
     },
     fullViewCard: {
-        height: '100%',
+        height: '80%',
     },
     image: {
         borderRadius: 10,
@@ -390,17 +335,15 @@ const styles = StyleSheet.create({
     foodName: {
         fontSize: DEFAULT_PROPS.XXL_FONT_SIZE,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 15,
         textTransform: 'capitalize',
     },
     nutrientContainer: {
         flexDirection: 'column',
-        marginVertical: 10,
+        marginBottom: -20,
     },
     nutrientHeading: {
-        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
-        marginVertical: 4,
-        fontWeight: 500,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
     },
     nutrientText: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,

@@ -1,9 +1,9 @@
 import { BlurView } from '@react-native-community/blur';
-import { Modal, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Modal, Text, View, TouchableOpacity, ScrollView, TouchableWithoutFeedback } from 'react-native';
 import { screenHeight, screenWidth } from '../utils/functions';
 import { DEFAULT_PROPS, KEY_NUTRIENTS_UNITS, MACRO_NUTRIENTS, MICRO_NUTRIENTS, OTHER_CONSTANTS, VITAMINS } from '../utils/constants';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addToMeal } from '../utils/store';
 
@@ -17,8 +17,18 @@ const FoodItemFullDetails = ({
     onClose
 }) => {
     const scrollIndicator = useRef();
+    const [addedToMeal, setAddedToMeal] = useState(false);
 
     const dispatch = useDispatch();
+
+    const handleAddToMeal = () => {
+        setAddedToMeal(true);
+        // Add to meal
+        dispatch(addToMeal({ itemName: foodItemName, nutrients: foodItem }));
+        setTimeout(() => {
+            setAddedToMeal(false)
+        }, 2000);
+    }
 
 
     useEffect(() => {
@@ -107,22 +117,37 @@ const FoodItemFullDetails = ({
                         </ScrollView>
 
                         {/* Add to meal */}
-                        <TouchableOpacity onPress={() => {
-                            // Add to meal
-                            dispatch(addToMeal({ itemName: foodItemName, nutrients: foodItem }));
-                        }}
+                        <TouchableOpacity
+                            disabled={addedToMeal}
+                            onPress={() => handleAddToMeal()}
                             style={[styles.addToMealButton, {
                                 borderColor: backgroundColor === '#333' ? 'white' : 'black',
                             }]}>
                             <View flexDirection={'row'} alignItems={'center'}>
-                                <Text style={[styles.nutrientText, {
-                                    color: backgroundColor === '#333' ? 'white' : 'black',
-                                    fontWeight: 600,
-                                }]}>
-                                    Add to Meal
-                                </Text>
-                                <View style={{ marginLeft: 2 }} />
-                                <Icon name="add-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={backgroundColor === '#333' ? 'white' : 'black'} />
+                                {addedToMeal ? (
+                                    <>
+                                        <Text style={[styles.nutrientText, {
+                                            color: backgroundColor === '#333' ? 'white' : 'black',
+                                        }]}>
+                                            Added to Meal
+                                        </Text>
+                                        <View style={{ marginLeft: 2 }} />
+                                        <Icon name="checkmark-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={backgroundColor === '#333' ? 'white' : 'black'} />
+                                    </>
+                                ) :
+                                    (
+                                        <>
+                                            <Text style={[styles.nutrientText, {
+                                                color: backgroundColor === '#333' ? 'white' : 'black',
+                                                fontWeight: 600,
+                                            }]}>
+                                                Add to Meal
+                                            </Text>
+                                            <View style={{ marginLeft: 2 }} />
+                                            <Icon name="add-circle-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE} color={backgroundColor === '#333' ? 'white' : 'black'} />
+                                        </>
+                                    )
+                                }
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -144,8 +169,6 @@ const styles = {
     modalContainer: {
         borderRadius: 10,
         padding: DEFAULT_PROPS.MD_FONT_SIZE,
-        marginTop: screenHeight() * 0.04,
-        marginBottom: screenHeight() * 0.015,
     },
     nutrientContainer: {
         marginVertical: 10,

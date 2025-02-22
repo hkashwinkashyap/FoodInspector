@@ -245,7 +245,7 @@ const CreateMealScreen = () => {
                     onPress={handleCreateMeal}
                     disabled={mealCreated}>
                     {mealCreated ? (
-                        <Icon name="bag-check-outline" size={DEFAULT_PROPS.XXL_FONT_SIZE}
+                        <Icon name="bag-check-outline" size={DEFAULT_PROPS.XL_FONT_SIZE}
                             color={currentTheme === "dark" ? "white" : "black"} />
                     ) : (
                         <>
