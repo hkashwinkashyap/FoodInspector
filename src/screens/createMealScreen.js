@@ -369,7 +369,6 @@ const styles = StyleSheet.create({
         padding: DEFAULT_PROPS.XS_FONT_SIZE,
         flexDirection: 'row',
         gap: 10,
-        flex: 1,
     },
     createButtonText: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,

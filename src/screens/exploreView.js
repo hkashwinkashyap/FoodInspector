@@ -41,38 +41,6 @@ const ExploreView = () => {
         }
     }, [macrosData]);
 
-    useEffect(() => {
-        const fetchImage = async () => {
-            setLoading(true)
-            try {
-                const response = await axios.get(PEXELS_API_URL, {
-                    headers: {
-                        Authorization: PEXELS_API_KEY,
-                    },
-                    params: {
-                        query: randomItems[currentIndex],
-                        per_page: 2,
-                    },
-                });
-                if (response.data.photos.length > 0) {
-                    setImage(response.data.photos[0].src.original);
-                } else {
-                    setImage(null);
-                }
-            } catch (error) {
-                console.error('Error fetching image from Pexels:', error);
-                setImage(null);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        if (randomItems.length > 0) {
-            fetchImage()
-        }
-
-    }, [randomItems, currentIndex])
-
     const handleAddToMeal = (foodItemName, nutrients) => {
         setAddedToMeal(true);
 
@@ -107,56 +75,21 @@ const ExploreView = () => {
         console.log('Converted Nutrients:', convertedNutrients);
 
         return (
-            <View style={[styles.foodCard, {
-                backgroundColor: currentTheme === 'dark' ? '#002021' : 'white',
-                shadowColor: currentTheme === 'dark' ? 'white' : '#333',
-            }]}>
-                <Text style={[styles.foodName, {
-                    color: currentTheme === 'dark' ? 'white' : '#333',
-                }]}>{item}</Text>
-                {/* <View style={styles.image} width={'100%'} alignItems={'center'} justifyContent={'center'} height={screenHeight() * 0.3}>
-                    {!loading ? (
-                        <ImageBackground
-                            source={{ uri: image }}
-                            style={{ width: '100%', height: '100%' }}
-                            imageStyle={{ borderRadius: 10 }}
-                        >
-                            <View style={styles.overlayTextBox}>
-                                <Text style={styles.overlayText}>
-                                    {DEFAULT_PROPS.imageOverlayText}
-                                </Text>
-                            </View>
-                        </ImageBackground>
-                    ) : (
-                        <Text>{DEFAULT_PROPS.loadingText}.</Text>
-                    )}
-                </View> */}
-                <View style={styles.nutrientContainer}>
+            <View style={styles.foodCard}>
+                <TouchableOpacity onPress={() => {
+                    handleViewMore(item);
+                }}>
                     <View flexDirection={'row'}
-                        alignItems={'center'}
-                        justifyContent={'space-between'}
-                    >
-                        <Text style={[styles.nutrientHeading, {
-                            color: currentTheme === 'dark' ? '#ccc' : '#777',
-                        }]}>Nutrition Information:</Text>
-                        <TouchableOpacity onPress={() => {
-                            handleViewMore(item);
-                        }}
-                            style={[styles.addToMealButton, {
-                                borderColor: currentTheme === 'dark' ? 'white' : 'black',
-                            }]}>
-                            <View flexDirection={'row'} alignItems={'center'}>
-                                <Text style={[styles.buttonText, {
-                                    color: currentTheme === 'dark' ? 'white' : 'black',
-                                    fontWeight: 600,
-                                }]}>
-                                    View More
-                                </Text>
-                                <View style={{ marginLeft: 2 }} />
-                                <Icon name="information-circle-outline" size={DEFAULT_PROPS.XL_FONT_SIZE} color={currentTheme === 'dark' ? 'white' : 'black'} />
-                            </View>
-                        </TouchableOpacity>
+                        alignItems={'center'}>
+                        <Text style={[styles.foodName, {
+                            color: currentTheme === 'dark' ? 'white' : '#333',
+                        }]}>{item}</Text>
+                        <Icon name="information-circle-outline"
+                            size={DEFAULT_PROPS.LG_FONT_SIZE}
+                            color={currentTheme === 'dark' ? 'white' : 'black'} />
                     </View>
+                </TouchableOpacity>
+                <View style={styles.nutrientContainer}>
                     <NutrientsCards totalNutrition={convertedNutrients} hideViewAllMicros={true} />
                 </View>
                 {/* Add to meal */}
@@ -314,9 +247,11 @@ export default ExploreView
 const styles = StyleSheet.create({
     safeArea: {
         height: screenHeight(),
+        flex: 1,
     },
     fullViewCard: {
-        height: screenHeight() * 0.8,
+        maxHeight: screenHeight() * 0.8,
+        flexGrow: 1,
     },
     image: {
         borderRadius: 10,
@@ -325,8 +260,7 @@ const styles = StyleSheet.create({
         position: 'relative',
     },
     foodCard: {
-        padding: 15,
-        marginVertical: 10,
+        padding: 10,
         marginHorizontal: 5,
         borderRadius: 10,
         shadowOffset: { width: 0, height: 2 },
@@ -335,10 +269,10 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     foodName: {
-        fontSize: DEFAULT_PROPS.XXL_FONT_SIZE,
+        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
         fontWeight: 'bold',
-        marginBottom: 15,
         textTransform: 'capitalize',
+        marginRight: 4,
     },
     nutrientContainer: {
         flexDirection: 'column',

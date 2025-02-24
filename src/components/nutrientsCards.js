@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import { useState } from "react";
 import { ProgressBar } from "react-native-paper";
 import Icon from "react-native-vector-icons/Ionicons";
+import { screenHeight } from "../utils/functions";
 
 const NutrientsCards = ({
     totalNutrition,
@@ -14,13 +15,16 @@ const NutrientsCards = ({
     const [showAllMicros, setShowAllMicros] = useState(false);
 
     return (
-        <ScrollView contentContainerStyle={styles.contentContainer}>
+        <ScrollView contentContainerStyle={styles.contentContainer}
+            showsVerticalScrollIndicator={false} >
             {/* Macros */}
-            <View style={styles.section}>
-                <Text style={[styles.sectionTitle,
-                { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
-                    Macros
-                </Text>
+            < View style={styles.section} >
+                <View marginLeft={4}>
+                    <Text style={[styles.sectionTitle,
+                    { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
+                        Macros
+                    </Text>
+                </View>
                 <View style={styles.gridContainer}>
                     {["Calories", "Protein", "Carbohydrates", "Fat"].map(key => (
                         <View key={key} style={[styles.nutrientCard, { backgroundColor: currentTheme === 'dark' ? '#333' : '#FFF' }]}>
@@ -35,14 +39,16 @@ const NutrientsCards = ({
                         </View>
                     ))}
                 </View>
-            </View>
+            </View >
 
             {/* Micros */}
-            <View >
-                <Text style={[styles.sectionTitle,
-                { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
-                    Micros
-                </Text>
+            < View >
+                <View marginLeft={4}>
+                    <Text style={[styles.sectionTitle,
+                    { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
+                        Micros
+                    </Text>
+                </View>
                 <View style={styles.gridContainer}>
                     {["Iron", "Calcium", "Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin D"].map(key => (
                         <View key={key} style={[styles.nutrientCard, { backgroundColor: currentTheme === 'dark' ? '#333' : '#FFF' }]}>
@@ -58,44 +64,48 @@ const NutrientsCards = ({
                         </View>
                     ))}
                 </View>
-                {!showAllMicros && !hideViewAllMicros && (
-                    <TouchableOpacity
-                        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                        onPress={() => setShowAllMicros(true)}
-                        style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
-                        <Icon name='chevron-down-outline'
-                            size={DEFAULT_PROPS.XL_FONT_SIZE}
-                            color={currentTheme === 'dark' ? 'white' : 'black'} />
-                    </TouchableOpacity>
-                )}
-
-                {showAllMicros && !hideViewAllMicros && (
-                    <View style={styles.gridContainer}>
-                        {["Vitamin B1", "Vitamin B2", "Vitamin B6", "Vitamin E", "Vitamin K", "Magnesium"].map(key => (
-                            <View key={key} style={[styles.nutrientCard, { backgroundColor: currentTheme === 'dark' ? '#333' : '#FFF' }]}>
-                                <Text style={[styles.nutrientTitle,
-                                { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
-                                    {key}
-                                </Text>
-                                <ProgressBar progress={(totalNutrition[key] || 0) / DAILY_INTAKE[key]} color="#FF9800" style={styles.progressBar} />
-                                <Text style={[styles.nutrientValue,
-                                { color: currentTheme === 'dark' ? '#ddd' : '#555' }]}
-                                >{totalNutrition[key] || 0} {DAILY_INTAKE_UNITS[key]} / {DAILY_INTAKE[key]} {DAILY_INTAKE_UNITS[key]}
-                                </Text>
-                            </View>
-                        ))}
+                {
+                    !showAllMicros && !hideViewAllMicros && (
                         <TouchableOpacity
                             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-                            onPress={() => setShowAllMicros(false)}
+                            onPress={() => setShowAllMicros(true)}
                             style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
-                            <Icon name='chevron-up-outline'
+                            <Icon name='chevron-down-outline'
                                 size={DEFAULT_PROPS.XL_FONT_SIZE}
                                 color={currentTheme === 'dark' ? 'white' : 'black'} />
                         </TouchableOpacity>
-                    </View>
-                )}
-            </View>
-        </ScrollView>
+                    )
+                }
+
+                {
+                    showAllMicros && !hideViewAllMicros && (
+                        <View style={styles.gridContainer}>
+                            {["Vitamin B1", "Vitamin B2", "Vitamin B6", "Vitamin E", "Vitamin K", "Magnesium"].map(key => (
+                                <View key={key} style={[styles.nutrientCard, { backgroundColor: currentTheme === 'dark' ? '#333' : '#FFF' }]}>
+                                    <Text style={[styles.nutrientTitle,
+                                    { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
+                                        {key}
+                                    </Text>
+                                    <ProgressBar progress={(totalNutrition[key] || 0) / DAILY_INTAKE[key]} color="#FF9800" style={styles.progressBar} />
+                                    <Text style={[styles.nutrientValue,
+                                    { color: currentTheme === 'dark' ? '#ddd' : '#555' }]}
+                                    >{totalNutrition[key] || 0} {DAILY_INTAKE_UNITS[key]} / {DAILY_INTAKE[key]} {DAILY_INTAKE_UNITS[key]}
+                                    </Text>
+                                </View>
+                            ))}
+                            <TouchableOpacity
+                                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                                onPress={() => setShowAllMicros(false)}
+                                style={{ width: '100%', alignItems: 'center', marginTop: 10 }}>
+                                <Icon name='chevron-up-outline'
+                                    size={DEFAULT_PROPS.XL_FONT_SIZE}
+                                    color={currentTheme === 'dark' ? 'white' : 'black'} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
+            </View >
+        </ScrollView >
     )
 }
 
@@ -104,6 +114,9 @@ export default NutrientsCards;
 const styles = StyleSheet.create({
     contentContainer: {
         paddingTop: 10,
+    },
+    section: {
+        flexGrow: 1,
     },
     nutrientTitle: {
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
@@ -120,7 +133,7 @@ const styles = StyleSheet.create({
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
     },
     sectionTitle: {
-        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         fontWeight: 'bold',
         marginBottom: 10,
     },
@@ -140,7 +153,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     progressBar: {
-        height: 8,
+        height: 5,
         borderRadius: 4,
         marginVertical: 5,
     }

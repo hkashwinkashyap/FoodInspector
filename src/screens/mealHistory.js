@@ -1,59 +1,101 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, SafeAreaView } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { setSavedMeals } from '../utils/store';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { screenHeight } from '../utils/functions';
+import { exportToCSV, screenHeight } from '../utils/functions';
+import { DAILY_INTAKE_UNITS, DEFAULT_PROPS } from '../utils/constants';
 
 const MealHistoryView = () => {
     const dispatch = useDispatch();
     const mealsFromAsyncStorage = useSelector(state => state.meal.savedMeals);
+    const currentTheme = useSelector(state => state.colourTheme.currentTheme);
+    const [meals, setMeals] = useState([]);
 
-    const [meals, setMeals] = React.useState([...mealsFromAsyncStorage].sort((a, b) => a.timestamp - b.timestamp));
+    useEffect(() => {
+        if (!mealsFromAsyncStorage) return;
+        const orderedMeals = [...mealsFromAsyncStorage].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        setMeals(orderedMeals);
+    }, [mealsFromAsyncStorage]);
 
-    // Clear all meals with confirmation
+    const formatTimestamp = (timestamp) => {
+        const date = new Date(timestamp);
+        const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+        const timeString = date.toLocaleTimeString([], options);
+        const today = new Date();
+        if (date.toDateString() === today.toDateString()) {
+            return `Today at ${timeString}`;
+        }
+        today.setDate(today.getDate() - 1);
+        if (date.toDateString() === today.toDateString()) {
+            return `Yesterday at ${timeString}`;
+        }
+        return date.toLocaleDateString(undefined, { weekday: 'long' }) + ` at ${timeString}`;
+    };
+
     const clearAllMeals = async () => {
-        Alert.alert(
-            'Clear All Meals',
-            'Are you sure you want to delete all saved meals?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Yes',
-                    onPress: async () => {
-                        await AsyncStorage.removeItem('meals');
-                        dispatch(setSavedMeals([]));
-                    }
+        Alert.alert('Clear All Meals', 'Are you sure you want to delete all saved meals?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Yes',
+                onPress: async () => {
+                    await AsyncStorage.removeItem('meals');
+                    dispatch(setSavedMeals([]));
                 }
-            ]
-        );
+            }
+        ]);
     };
 
     const renderMealItem = ({ item }) => (
-        <View style={styles.mealContainer}>
-            <Text style={styles.mealTitle}>{item.name}</Text>
-            <Text style={styles.timestamp}>{new Date(item.timestamp).toLocaleString()}</Text>
-            <Text style={styles.sectionTitle}>Items:</Text>
-            {item.items.map((food, index) => (
-                <Text key={index} style={styles.foodItem}>• {food.itemName}</Text>
-            ))}
-            <Text style={styles.sectionTitle}>Total Nutrition:</Text>
-            {Object.keys(item.totalNutrition).map((nutrient, index) => (
-                <Text key={index} style={styles.nutrientItem}>
-                    {nutrient}: {item.totalNutrition[nutrient]}
-                </Text>
-            ))}
+        <View style={[styles.mealContainer, { backgroundColor: currentTheme === 'dark' ? '#444' : '#F5F5F5' }]}>
+            <Text style={[styles.mealTitle, { color: currentTheme === 'dark' ? 'white' : 'black' }]}>{formatTimestamp(item.timestamp)}</Text>
+
+            <View style={styles.sectionContainer}>
+                <View style={styles.sectionHeader}>
+                    <Icon name="list-outline" size={18} color={currentTheme === 'dark' ? '#AAA' : '#666'} />
+                    <Text style={[styles.sectionTitle, { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>Items:</Text>
+                </View>
+                {[...new Set(item.items.map(food => food.itemName))].map((foodName, index) => (
+                    <Text key={index} style={[styles.foodItem, { color: currentTheme === 'dark' ? '#FFF' : '#333' }]}>• {foodName}</Text>
+                ))}
+            </View>
+
+            <View style={styles.sectionContainer}>
+                <View style={styles.sectionHeader}>
+                    <Icon name="barbell-outline" size={18} color={currentTheme === 'dark' ? '#AAA' : '#666'} />
+                    <Text style={[styles.sectionTitle, { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>Total Nutrition:</Text>
+                </View>
+                <View style={styles.nutritionContainer}>
+                    {Object.keys(item.totalNutrition).map((nutrient, index) => (
+                        <View key={index} style={styles.nutritionItem}>
+                            <Text style={[styles.nutrientLabel, { color: currentTheme === 'dark' ? '#CCC' : '#444' }]}>
+                                {nutrient === 'Caloric Value' ? 'Calories' : nutrient}:
+                            </Text>
+                            <Text style={[styles.nutrientValue, { color: currentTheme === 'dark' ? '#FFF' : '#000' }]}>
+                                {item.totalNutrition[nutrient]}
+                                {DAILY_INTAKE_UNITS[nutrient === 'Caloric Value' ? 'Calories' : nutrient] || 'g'}
+                            </Text>
+                        </View>
+                    ))}
+                </View>
+            </View>
         </View>
     );
 
     return (
-        <SafeAreaView style={styles.safeAreaVIew}>
+        <SafeAreaView style={[styles.safeAreaView, { backgroundColor: currentTheme === 'dark' ? '#222' : '#FFF' }]}>
             <View style={styles.container}>
-                <TouchableOpacity style={styles.clearButton} onPress={clearAllMeals}>
-                    <Icon name="trash-outline" size={24} color="white" />
-                    <Text style={styles.clearButtonText}>Clear All Meals</Text>
-                </TouchableOpacity>
+                <View style={styles.topButtonsContainer}>
+                    <TouchableOpacity style={styles.button} onPress={clearAllMeals}>
+                        <Icon name="trash-outline" size={DEFAULT_PROPS.LG_FONT_SIZE} color="white" />
+                        <Text style={styles.buttonText}>Clear All Meals</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => exportToCSV(meals)}>
+                        <Icon name="share-outline" size={DEFAULT_PROPS.LG_FONT_SIZE} color="white" />
+                        <Text style={styles.buttonText}>Export CSV</Text>
+                    </TouchableOpacity>
+                </View>
                 <FlatList
                     data={meals}
                     keyExtractor={(item, index) => index.toString()}
@@ -65,61 +107,78 @@ const MealHistoryView = () => {
 };
 
 const styles = StyleSheet.create({
-    safeAreaVIew: {
-        height: screenHeight() * 0.95
+    safeAreaView: {
+        height: screenHeight(),
+        flex: 1
     },
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#f8f8f8'
     },
-    clearButton: {
+    topButtonsContainer: {
+        flexDirection: 'row',
+    },
+    button: {
+        width: '48%',
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: 'red',
-        padding: 10,
-        borderRadius: 5,
+        padding: 12,
+        borderRadius: 8,
         justifyContent: 'center',
-        marginBottom: 10
+        marginBottom: 12,
     },
-    clearButtonText: {
+    buttonText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         fontWeight: 'bold',
-        marginLeft: 8
+        marginLeft: 8,
     },
     mealContainer: {
-        backgroundColor: 'white',
-        padding: 15,
-        borderRadius: 8,
-        marginBottom: 10,
+        padding: 16,
+        marginVertical: 8,
+        borderRadius: 10,
+        elevation: 3,
         shadowColor: '#000',
         shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3
+        shadowRadius: 6,
     },
     mealTitle: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 5
+        marginBottom: 4,
     },
-    timestamp: {
-        fontSize: 12,
-        color: 'gray',
-        marginBottom: 10
+    sectionContainer: {
+        marginTop: 12,
+        paddingVertical: 6,
+    },
+    sectionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 4,
     },
     sectionTitle: {
+        fontSize: 16,
         fontWeight: 'bold',
-        marginTop: 5
+        marginLeft: 6,
     },
     foodItem: {
         fontSize: 14,
-        marginLeft: 10
+        marginLeft: 8,
     },
-    nutrientItem: {
+    nutritionContainer: {
+        marginTop: 6,
+    },
+    nutritionItem: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 4,
+    },
+    nutrientLabel: {
         fontSize: 14,
-        marginLeft: 10,
-        color: '#4CAF50'
+    },
+    nutrientValue: {
+        fontSize: 14,
+        fontWeight: 'bold',
     }
 });
 

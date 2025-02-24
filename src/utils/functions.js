@@ -148,3 +148,45 @@ export const generateMealName = (existingMeals) => {
 
     return `${suffix}${period}-meal-${date}`;
 };
+
+import Share from 'react-native-share';
+import { Platform } from 'react-native';
+import { DAILY_INTAKE_UNITS } from './constants';
+import moment from 'moment';
+
+export const exportToCSV = async (meals) => {
+    // Get all possible nutrient keys from meals
+    const allNutrients = new Set();
+    meals.forEach(meal => {
+        Object.keys(meal.totalNutrition).forEach(nutrient => allNutrients.add(nutrient));
+    });
+    const nutrientList = Array.from(allNutrients);
+
+    // Construct CSV header with all nutrient columns
+    const csvHeader = ["Timestamp", "Items", ...nutrientList.map(nutrientItem =>
+        `${nutrientItem}${nutrientItem === 'Nutrition Density' ? '' : ` (${DAILY_INTAKE_UNITS[nutrientItem === 'Caloric Value' ? 'Calories' : nutrientItem] || 'g'})`}`
+    )].join(",") + "\n";
+
+    // Construct CSV rows
+    const csvRows = meals.map(meal => {
+        const uniqueItems = [...new Set(meal.items.map(i => i.itemName))].join(", "); // Remove duplicates
+        const nutritionValues = nutrientList.map(n => meal.totalNutrition[n] || 0); // Fill missing nutrients with 0
+        return `"${meal.timestamp}","${uniqueItems}",${nutritionValues.join(",")}`;
+    });
+
+
+
+    const csvString = csvHeader + csvRows.join("\n");
+
+    const currentTimestamp = moment(Date.now());
+    let fileName = `Meal_History_at_${currentTimestamp.format('DD-MM-YYYY_HH-mm-ss')}.csv`;
+
+    const csvPath = `${RNFS.DocumentDirectoryPath}/${fileName}.csv`;
+    await RNFS.writeFile(csvPath, csvString, "utf8");
+
+    await Share.open({
+        url: `file://${csvPath}`,
+        type: "text/csv",
+        title: "Share Meal History",
+    });
+};

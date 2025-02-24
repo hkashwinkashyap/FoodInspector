@@ -53,7 +53,8 @@ const HomeView = () => {
 const styles = StyleSheet.create({
     safeArea: {
         height: screenHeight() * 0.95,
-        padding: 20,
+        padding: 12,
+        paddingBottom: 15
     },
     header: {
         gap: 10,
