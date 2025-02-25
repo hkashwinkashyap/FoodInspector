@@ -53,18 +53,23 @@ const MealHistoryView = () => {
 
             <View style={styles.sectionContainer}>
                 <View style={styles.sectionHeader}>
-                    <Icon name="list-outline" size={18} color={currentTheme === 'dark' ? '#AAA' : '#666'} />
-                    <Text style={[styles.sectionTitle, { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>Items:</Text>
+                    <Icon name="list-outline" size={DEFAULT_PROPS.XLS_FONT_SIZE}
+                        color={currentTheme === 'dark' ? '#AAA' : '#666'} />
+                    <Text style={[styles.sectionTitle,
+                    { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>Items:</Text>
                 </View>
                 {[...new Set(item.items.map(food => food.itemName))].map((foodName, index) => (
-                    <Text key={index} style={[styles.foodItem, { color: currentTheme === 'dark' ? '#FFF' : '#333' }]}>• {foodName}</Text>
+                    <Text key={index} style={[styles.foodItem,
+                    { color: currentTheme === 'dark' ? '#FFF' : '#333' }]}>• {foodName}</Text>
                 ))}
             </View>
 
             <View style={styles.sectionContainer}>
                 <View style={styles.sectionHeader}>
-                    <Icon name="barbell-outline" size={18} color={currentTheme === 'dark' ? '#AAA' : '#666'} />
-                    <Text style={[styles.sectionTitle, { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>Total Nutrition:</Text>
+                    <Icon name="barbell-outline" size={DEFAULT_PROPS.XLS_FONT_SIZE}
+                        color={currentTheme === 'dark' ? '#AAA' : '#666'} />
+                    <Text style={[styles.sectionTitle,
+                    { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>Total Nutrition:</Text>
                 </View>
                 <View style={styles.nutritionContainer}>
                     {Object.keys(item.totalNutrition).map((nutrient, index) => (
@@ -84,23 +89,45 @@ const MealHistoryView = () => {
     );
 
     return (
-        <SafeAreaView style={[styles.safeAreaView, { backgroundColor: currentTheme === 'dark' ? '#222' : '#FFF' }]}>
+        <SafeAreaView style={[styles.safeAreaView,
+        { backgroundColor: currentTheme === 'dark' ? '#121212' : '#F9F9F9' }]}>
             <View style={styles.container}>
-                <View style={styles.topButtonsContainer}>
-                    <TouchableOpacity style={styles.button} onPress={clearAllMeals}>
-                        <Icon name="trash-outline" size={DEFAULT_PROPS.LG_FONT_SIZE} color="white" />
-                        <Text style={styles.buttonText}>Clear All Meals</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => exportToCSV(meals)}>
-                        <Icon name="share-outline" size={DEFAULT_PROPS.LG_FONT_SIZE} color="white" />
-                        <Text style={styles.buttonText}>Export CSV</Text>
-                    </TouchableOpacity>
-                </View>
-                <FlatList
-                    data={meals}
-                    keyExtractor={(item, index) => index.toString()}
-                    renderItem={renderMealItem}
-                />
+                {meals.length > 0 ? (
+                    <>
+                        <View style={styles.topButtonsContainer}>
+                            <TouchableOpacity style={styles.button} onPress={clearAllMeals}>
+                                <Icon name="trash-outline" size={DEFAULT_PROPS.LG_FONT_SIZE}
+                                    color={currentTheme === 'dark' ? 'white' : 'black'}
+                                />
+                                <Text style={[styles.buttonText,
+                                { color: currentTheme === 'dark' ? 'white' : 'black' }
+                                ]}>Clear All Meals</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={() => exportToCSV(meals)}>
+                                <Icon name="share-outline" size={DEFAULT_PROPS.LG_FONT_SIZE}
+                                    color={currentTheme === 'dark' ? 'white' : 'black'} />
+                                <Text style={[styles.buttonText,
+                                { color: currentTheme === 'dark' ? 'white' : 'black' }
+                                ]}>Export CSV</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <FlatList
+                            data={meals}
+                            keyExtractor={(item, index) => index.toString()}
+                            renderItem={renderMealItem}
+                        />
+                    </>
+                ) : (
+                    <View style={styles.noMealsContainer}>
+                        <Icon name="fast-food-outline" size={50} color={currentTheme === 'dark' ? '#AAA' : '#666'} />
+                        <Text style={[styles.noMealsText, { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
+                            No meals found
+                        </Text>
+                        <Text style={[styles.noMealsSubText, { color: currentTheme === 'dark' ? '#AAA' : '#666' }]}>
+                            Start adding meals to track your nutrition.
+                        </Text>
+                    </View>
+                )}
             </View>
         </SafeAreaView>
     );
@@ -115,6 +142,24 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
     },
+    noMealsContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        opacity: 0.8,
+    },
+    noMealsText: {
+        fontSize: DEFAULT_PROPS.XL_FONT_SIZE,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginTop: 10,
+    },
+    noMealsSubText: {
+        fontSize: DEFAULT_PROPS.MD_FONT_SIZE,
+        textAlign: 'center',
+        marginTop: 5,
+    },
     topButtonsContainer: {
         flexDirection: 'row',
     },
@@ -128,7 +173,6 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     buttonText: {
-        color: 'white',
         fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         fontWeight: 'bold',
         marginLeft: 8,
@@ -137,10 +181,10 @@ const styles = StyleSheet.create({
         padding: 16,
         marginVertical: 8,
         borderRadius: 10,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3
     },
     mealTitle: {
         fontSize: 20,
@@ -157,12 +201,12 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     sectionTitle: {
-        fontSize: 16,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         fontWeight: 'bold',
         marginLeft: 6,
     },
     foodItem: {
-        fontSize: 14,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         marginLeft: 8,
     },
     nutritionContainer: {
@@ -174,10 +218,10 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     nutrientLabel: {
-        fontSize: 14,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
     },
     nutrientValue: {
-        fontSize: 14,
+        fontSize: DEFAULT_PROPS.LG_FONT_SIZE,
         fontWeight: 'bold',
     }
 });

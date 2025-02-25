@@ -179,7 +179,7 @@ export const exportToCSV = async (meals) => {
     const csvString = csvHeader + csvRows.join("\n");
 
     const currentTimestamp = moment(Date.now());
-    let fileName = `Meal_History_at_${currentTimestamp.format('DD-MM-YYYY_HH-mm-ss')}.csv`;
+    let fileName = `Meal_History_at_${currentTimestamp.format('DD-MM-YYYY_HH-mm-ss')}`;
 
     const csvPath = `${RNFS.DocumentDirectoryPath}/${fileName}.csv`;
     await RNFS.writeFile(csvPath, csvString, "utf8");

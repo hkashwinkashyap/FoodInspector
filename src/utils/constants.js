@@ -11,6 +11,7 @@ export const DEFAULT_PROPS = {
     SM_FONT_SIZE: 10,
     MD_FONT_SIZE: 12,
     LG_FONT_SIZE: 16,
+    XLS_FONT_SIZE: 18,
     XL_FONT_SIZE: 20,
     XXL_FONT_SIZE: 24,
 };

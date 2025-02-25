@@ -208,7 +208,7 @@ const ExploreView = () => {
 
     return (
         <SafeAreaView style={[styles.safeArea, {
-            backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
+            backgroundColor: currentTheme === 'dark' ? '#121212' : '#F9F9F9',
         }]}
         >
             <FoodItemFullDetails

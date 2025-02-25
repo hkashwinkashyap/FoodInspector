@@ -89,7 +89,7 @@ const CreateMealScreen = () => {
 
     return (
         <SafeAreaView style={[styles.safeArea, {
-            backgroundColor: currentTheme === 'dark' ? 'black' : 'white',
+            backgroundColor: currentTheme === 'dark' ? '#121212' : '#F9F9F9',
         }]}>
             <View style={styles.container}>
                 {/* Header with Back Button */}

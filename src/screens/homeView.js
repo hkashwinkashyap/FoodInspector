@@ -34,17 +34,19 @@ const HomeView = () => {
     return (
         <SafeAreaView style={[styles.safeArea,
         { backgroundColor: currentTheme === 'dark' ? '#121212' : '#F9F9F9' }]}>
-            <View style={styles.header}>
-                <Text style={[styles.greeting,
-                { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
-                    {greeting}! 👋
-                </Text>
-                <Text style={[styles.subtitle,
-                { color: currentTheme === 'dark' ? '#ccc' : '#777' }]}>
-                    Here's your meal summary for today:
-                </Text>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Text style={[styles.greeting,
+                    { color: currentTheme === 'dark' ? 'white' : 'black' }]}>
+                        {greeting}! 👋
+                    </Text>
+                    <Text style={[styles.subtitle,
+                    { color: currentTheme === 'dark' ? '#ccc' : '#777' }]}>
+                        Here's your meal summary for today:
+                    </Text>
+                </View>
+                <NutrientsCards totalNutrition={totalNutrition} />
             </View>
-            <NutrientsCards totalNutrition={totalNutrition} />
             <MealBasket />
         </SafeAreaView>
     );
@@ -55,6 +57,12 @@ const styles = StyleSheet.create({
         height: screenHeight() * 0.95,
         padding: 12,
         paddingBottom: 15
+    },
+    container: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        elevation: 3,
     },
     header: {
         gap: 10,
