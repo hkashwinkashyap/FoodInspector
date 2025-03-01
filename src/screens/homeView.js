@@ -8,13 +8,29 @@ import { DEFAULT_PROPS } from '../utils/constants';
 import MealBasket from '../components/mealBasket';
 import NutrientsCards from '../components/nutrientsCards';
 
+import { NativeModules } from 'react-native';
+const { EmbeddedLlmModule } = NativeModules;
+
 const HomeView = () => {
     const currentTheme = useSelector(state => state.colourTheme.currentTheme);
     const savedMeals = useSelector(state => state.meal.savedMeals);
     const [greeting, setGreeting] = useState('');
 
+    async function getLlmResponse(prompt) {
+        try {
+            const response = await EmbeddedLlmModule.processText(prompt);
+            console.log('TRACE: Response -', response)
+        } catch (error) {
+            console.error("ERR: LLM Error:", error);
+            return "Error generating response";
+        }
+    }
+
+
     useEffect(() => {
         setGreeting(getGreeting());
+
+        getLlmResponse('Give me nutrition information for 100 g of tangerine in the format of `Calories: kcal, Protein: g, Carbohydrates: g, Fat: g, Vitamin A: µg, Vitamin B12: µg, Vitamin D: µg, Iron: mg, Calcium: mg, Vitamin B1: mg, Vitamin B2: mg, Vitamin B3: mg, Vitamin B5: mg, Vitamin B6: mg, Vitamin C: mg, Vitamin E: mg, Vitamin K: µg, Copper: mg, Magnesium: mg, Potassium: mg, Cholesterol: mg`');
     }, []);
 
     const getGreeting = () => {
@@ -45,7 +61,9 @@ const HomeView = () => {
                         Here's your meal summary for today:
                     </Text>
                 </View>
-                <NutrientsCards totalNutrition={totalNutrition} />
+                <View style={{ flex: 9 }}>
+                    <NutrientsCards totalNutrition={totalNutrition} />
+                </View>
             </View>
             <MealBasket />
         </SafeAreaView>
@@ -59,12 +77,14 @@ const styles = StyleSheet.create({
         paddingBottom: 15
     },
     container: {
+        flex: 1,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
         elevation: 3,
     },
     header: {
+        flex: 1,
         gap: 10,
         marginBottom: 10
     },

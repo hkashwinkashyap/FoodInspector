@@ -22,6 +22,10 @@ target 'FoodInspector' do
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
   )
+  
+  # Add MediaPipe LLM dependencies
+  pod 'MediaPipeTasksGenAI'
+  pod 'MediaPipeTasksGenAIC'
 
   target 'FoodInspectorTests' do
     inherit! :complete

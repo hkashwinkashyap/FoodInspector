@@ -12,6 +12,10 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.mm */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		2F868A522D73379F003C3F77 /* EmbeddedLlmModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 2F868A4D2D73379F003C3F77 /* EmbeddedLlmModule.m */; };
+		2F868A532D73379F003C3F77 /* InitLlm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F868A502D73379F003C3F77 /* InitLlm.swift */; };
+		2F868A542D73379F003C3F77 /* EmbeddedLlmModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F868A4E2D73379F003C3F77 /* EmbeddedLlmModule.swift */; };
+		2FADE1312D732C850059BE54 /* gemma-2b-it-cpu-int4.bin in Resources */ = {isa = PBXBuildFile; fileRef = 2FADE1302D732C850059BE54 /* gemma-2b-it-cpu-int4.bin */; };
 		2FF78BA32C9A11F8004BBC48 /* FOOD-DATA-GROUP1.csv in Resources */ = {isa = PBXBuildFile; fileRef = 2FF78BA22C9A11F8004BBC48 /* FOOD-DATA-GROUP1.csv */; };
 		2FF78BA82C9A1526004BBC48 /* FOOD-DATA-GROUP3.csv in Resources */ = {isa = PBXBuildFile; fileRef = 2FF78BA42C9A1526004BBC48 /* FOOD-DATA-GROUP3.csv */; };
 		2FF78BA92C9A1526004BBC48 /* FOOD-DATA-GROUP2.csv in Resources */ = {isa = PBXBuildFile; fileRef = 2FF78BA52C9A1526004BBC48 /* FOOD-DATA-GROUP2.csv */; };
@@ -44,6 +48,12 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = FoodInspector/main.m; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = FoodInspector/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-FoodInspector-FoodInspectorTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-FoodInspector-FoodInspectorTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2F868A4D2D73379F003C3F77 /* EmbeddedLlmModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EmbeddedLlmModule.m; sourceTree = "<group>"; };
+		2F868A4E2D73379F003C3F77 /* EmbeddedLlmModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbeddedLlmModule.swift; sourceTree = "<group>"; };
+		2F868A4F2D73379F003C3F77 /* FoodInspector-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FoodInspector-Bridging-Header.h"; sourceTree = "<group>"; };
+		2F868A502D73379F003C3F77 /* InitLlm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitLlm.swift; sourceTree = "<group>"; };
+		2F868A552D733B6A003C3F77 /* EmbeddedLlmModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EmbeddedLlmModule.h; sourceTree = "<group>"; };
+		2FADE1302D732C850059BE54 /* gemma-2b-it-cpu-int4.bin */ = {isa = PBXFileReference; lastKnownFileType = archive.macbinary; path = "gemma-2b-it-cpu-int4.bin"; sourceTree = "<group>"; };
 		2FF78BA22C9A11F8004BBC48 /* FOOD-DATA-GROUP1.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "FOOD-DATA-GROUP1.csv"; sourceTree = "<group>"; };
 		2FF78BA42C9A1526004BBC48 /* FOOD-DATA-GROUP3.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "FOOD-DATA-GROUP3.csv"; sourceTree = "<group>"; };
 		2FF78BA52C9A1526004BBC48 /* FOOD-DATA-GROUP2.csv */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "FOOD-DATA-GROUP2.csv"; sourceTree = "<group>"; };
@@ -126,6 +136,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2F868A512D73379F003C3F77 /* EmbeddedLlmModule */ = {
+			isa = PBXGroup;
+			children = (
+				2F868A4F2D73379F003C3F77 /* FoodInspector-Bridging-Header.h */,
+				2F868A4D2D73379F003C3F77 /* EmbeddedLlmModule.m */,
+				2F868A4E2D73379F003C3F77 /* EmbeddedLlmModule.swift */,
+				2F868A502D73379F003C3F77 /* InitLlm.swift */,
+				2F868A552D733B6A003C3F77 /* EmbeddedLlmModule.h */,
+			);
+			path = EmbeddedLlmModule;
+			sourceTree = "<group>";
+		};
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,6 +158,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				2F868A512D73379F003C3F77 /* EmbeddedLlmModule */,
+				2FADE1302D732C850059BE54 /* gemma-2b-it-cpu-int4.bin */,
 				13B07FAE1A68108700A75B9A /* FoodInspector */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* FoodInspectorTests */,
@@ -229,7 +253,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1620;
 					};
 				};
 			};
@@ -264,6 +288,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FADE1312D732C850059BE54 /* gemma-2b-it-cpu-int4.bin in Resources */,
 				2FF78BA32C9A11F8004BBC48 /* FOOD-DATA-GROUP1.csv in Resources */,
 				2FF78BA82C9A1526004BBC48 /* FOOD-DATA-GROUP3.csv in Resources */,
 				2FF78BAA2C9A1526004BBC48 /* FOOD-DATA-GROUP4.csv in Resources */,
@@ -423,6 +448,9 @@
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.mm in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				2F868A522D73379F003C3F77 /* EmbeddedLlmModule.m in Sources */,
+				2F868A532D73379F003C3F77 /* InitLlm.swift in Sources */,
+				2F868A542D73379F003C3F77 /* EmbeddedLlmModule.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -514,6 +542,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Nutraily;
 				PRODUCT_NAME = FoodInspector;
+				SWIFT_OBJC_BRIDGING_HEADER = "EmbeddedLlmModule/FoodInspector-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -548,6 +577,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "EmbeddedLlmModule/FoodInspector-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 				VERSIONING_SYSTEM = "apple-generic";
